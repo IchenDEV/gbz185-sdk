@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>gbz185-sdk | GB/Z 185 智能体互联 SDK</title>
+    <meta name="description" content="GB/Z 185-2026 智能体互联 TypeScript SDK 文档" />
+    <link rel="stylesheet" href="assets/styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="index.html">gbz185-sdk</a>
+      <nav>
+        <a href="api.html">API</a>
+        <a href="conformance.html">国标对照</a>
+        <a href="https://github.com/IchenDEV/gbz185-sdk">GitHub</a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="hero">
+        <h1>智能体互联 TypeScript SDK</h1>
+        <p class="lead">
+          面向 GB/Z 185 七个分册的参考 SDK，覆盖身份码、身份管理、智能体描述、发现、交互、工具调用和对照验证。
+        </p>
+        <div class="hero-actions">
+          <a class="button primary" href="api.html">查看 API</a>
+          <a class="button" href="conformance.html">查看国标覆盖</a>
+        </div>
+        <figure class="hero-visual">
+          <img src="assets/architecture.svg" alt="gbz185-sdk runtime architecture diagram" />
+        </figure>
+      </section>
+
+      <section class="grid">
+        <article>
+          <h2>全功能域覆盖</h2>
+          <p>导出 <code>GBZ185_FUNCTIONS</code>、<code>GBZ185_FRAI_INTERFACES</code> 和 <code>GBZ185_CONFORMANCE_MATRIX</code>，对照 GB/Z 185.1 到 185.7。</p>
+        </article>
+        <article>
+          <h2>可运行参考运行时</h2>
+          <p>内存运行时可直接执行注册、发布、发现、会话、群组消息分发、工具调用和凭证验证流程。</p>
+        </article>
+        <article>
+          <h2>传输层中立</h2>
+          <p>通过 <code>JsonTransport</code> 暴露统一操作，避免把国标强行绑定到 REST、WebSocket 或 MCP。</p>
+        </article>
+      </section>
+
+      <section class="section">
+        <h2>快速开始</h2>
+        <pre><code>import { createAgentInterconnectRuntime } from "gbz185-sdk";
+
+const runtime = createAgentInterconnectRuntime();
+
+const registration = await runtime.client.registerIdentity({
+  delegatorId: "example-org",
+  subject: "Calendar Agent",
+  registrationServiceProvider: "A1",
+  registrationRequester: "REQ001",
+  ontologySerial: "CALENDAR",
+  instanceSerial: "1",
+  issueCredential: true,
+  credentialScope: ["agent:interact", "tool:invoke"]
+});</code></pre>
+      </section>
+
+      <section class="section">
+        <h2>模块地图</h2>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>标准分册</th>
+                <th>SDK 表面</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>GB/Z 185.1 总体架构</td><td><code>createAgentInterconnectRuntime</code>、<code>GBZ185_FUNCTIONS</code></td></tr>
+              <tr><td>GB/Z 185.2 身份码</td><td><code>formatIdentityCode</code>、<code>parseIdentityCode</code>、<code>validateIdentityCode</code></td></tr>
+              <tr><td>GB/Z 185.3 身份管理</td><td><code>IdentityRegistryRuntime</code>、<code>CredentialIssuer</code>、<code>CredentialVerifier</code></td></tr>
+              <tr><td>GB/Z 185.4 智能体描述</td><td><code>AgentDescriptionRegistry</code>、<code>AgentDescription</code>、<code>SkillDescription</code></td></tr>
+              <tr><td>GB/Z 185.5 智能体发现</td><td><code>DiscoveryService</code>、<code>PresetDiscoverySource</code></td></tr>
+              <tr><td>GB/Z 185.6 智能体交互</td><td><code>InteractionRuntime</code>、<code>MessageDistributionRuntime</code></td></tr>
+              <tr><td>GB/Z 185.7 工具调用</td><td><code>ToolAccessRuntime</code>、<code>ToolRuntime</code></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <span>gbz185-sdk</span>
+      <span>TypeScript SDK for GB/Z 185-2026</span>
+    </footer>
+  </body>
+</html>

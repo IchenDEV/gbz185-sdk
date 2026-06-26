@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>API | gbz185-sdk</title>
+    <link rel="stylesheet" href="assets/styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="index.html">gbz185-sdk</a>
+      <nav>
+        <a href="api.html">API</a>
+        <a href="conformance.html">国标对照</a>
+        <a href="https://github.com/IchenDEV/gbz185-sdk">GitHub</a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="page-title">
+        <h1>SDK API 速查</h1>
+        <p>这里列出主要导出模块。完整 Markdown 版本见仓库中的 <code>docs/API_REFERENCE.md</code>。</p>
+      </section>
+
+      <section class="section two-column">
+        <article>
+          <h2>身份码</h2>
+          <ul>
+            <li><code>formatIdentityCode(parts)</code></li>
+            <li><code>parseIdentityCode(code)</code></li>
+            <li><code>validateIdentityCode(code)</code></li>
+            <li><code>validateIdentityCodeParts(parts)</code></li>
+          </ul>
+        </article>
+        <article>
+          <h2>运行时工厂</h2>
+          <ul>
+            <li><code>createAgentInterconnectRuntime()</code></li>
+            <li><code>AgentInterconnectRuntime</code></li>
+            <li><code>AgentInterconnectClient</code></li>
+            <li><code>JsonTransport</code></li>
+          </ul>
+        </article>
+        <article>
+          <h2>身份与凭证</h2>
+          <ul>
+            <li><code>IdentityRegistryRuntime</code></li>
+            <li><code>AgentIdentityMaintenance</code></li>
+            <li><code>CredentialIssuer</code></li>
+            <li><code>CredentialVerifier</code></li>
+            <li><code>DevelopmentCredentialIssuer</code></li>
+            <li><code>DevelopmentCredentialVerifier</code></li>
+          </ul>
+        </article>
+        <article>
+          <h2>描述与发现</h2>
+          <ul>
+            <li><code>AgentDescriptionRegistry</code></li>
+            <li><code>AgentDescriptionMaintenance</code></li>
+            <li><code>AgentDescription</code></li>
+            <li><code>SkillDescription</code></li>
+            <li><code>DiscoveryService</code></li>
+            <li><code>PresetDiscoverySource</code></li>
+          </ul>
+        </article>
+        <article>
+          <h2>交互与消息</h2>
+          <ul>
+            <li><code>InteractionRuntime</code></li>
+            <li><code>MessageDistributionRuntime</code></li>
+            <li><code>Session</code></li>
+            <li><code>Task</code></li>
+            <li><code>Message</code></li>
+            <li><code>DataItem</code></li>
+          </ul>
+        </article>
+        <article>
+          <h2>工具调用</h2>
+          <ul>
+            <li><code>ToolAccessRuntime</code></li>
+            <li><code>ToolRuntime</code></li>
+            <li><code>ToolDescriptor</code></li>
+            <li><code>ToolInvokeRequest</code></li>
+            <li><code>ToolInvokeResult</code></li>
+          </ul>
+        </article>
+      </section>
+
+      <section class="section">
+        <h2>完整流程示例</h2>
+        <pre><code>const runtime = createAgentInterconnectRuntime();
+
+await runtime.toolRuntime.registerTool(
+  {
+    toolId: "calendar.add",
+    toolName: "add_schedule",
+    toolDescription: "Add one calendar event",
+    toolVersion: "1.0.0",
+    toolInputParam: { date: "string", time: "string", event: "string" },
+    toolOutputParam: { eventId: "string", accepted: "boolean" }
+  },
+  (input) => ({ eventId: `evt-${input.date}-${input.time}`, accepted: true })
+);</code></pre>
+      </section>
+    </main>
+
+    <footer>
+      <span>API</span>
+      <span><a href="index.html">Back home</a></span>
+    </footer>
+  </body>
+</html>

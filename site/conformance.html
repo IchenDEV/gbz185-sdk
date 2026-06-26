@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>国标对照 | gbz185-sdk</title>
+    <link rel="stylesheet" href="assets/styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="index.html">gbz185-sdk</a>
+      <nav>
+        <a href="api.html">API</a>
+        <a href="conformance.html">国标对照</a>
+        <a href="https://github.com/IchenDEV/gbz185-sdk">GitHub</a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="page-title">
+        <h1>GB/Z 185 对照验证</h1>
+        <p>SDK 导出 <code>GBZ185_CONFORMANCE_MATRIX</code>，当前矩阵包含 24 条对照项，覆盖 7 个分册。</p>
+      </section>
+
+      <section class="stats">
+        <div><strong>12</strong><span>功能域</span></div>
+        <div><strong>10</strong><span>FRAI 接口</span></div>
+        <div><strong>24</strong><span>条款对照</span></div>
+        <div><strong>7</strong><span>标准分册</span></div>
+      </section>
+
+      <section class="section">
+        <h2>覆盖结论</h2>
+        <ul class="check-list">
+          <li>GB/Z 185.1 功能参考架构：覆盖。</li>
+          <li>GB/Z 185.2 身份码结构与校验：覆盖。</li>
+          <li>GB/Z 185.3 身份、凭证、鉴别生命周期：参考运行时覆盖，生产 CA 为扩展点。</li>
+          <li>GB/Z 185.4 智能体描述与发布生命周期：覆盖。</li>
+          <li>GB/Z 185.5 发现服务与预置信息发现：覆盖。</li>
+          <li>GB/Z 185.6 点对点、群组、混合交互模型：覆盖。</li>
+          <li>GB/Z 185.7 工具访问、工具服务、数据格式：覆盖。</li>
+        </ul>
+      </section>
+
+      <section class="section">
+        <h2>显式扩展边界</h2>
+        <p>以下内容属于外部治理、基础设施或应用界面，不在 SDK 中假实现，而是通过接口开放接入。</p>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>扩展边界</th>
+                <th>SDK 接口</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>生产级 CA、证书状态、国密算法</td><td><code>CertificateChainVerifier</code>、<code>CredentialIssuer</code>、<code>CredentialVerifier</code></td></tr>
+              <tr><td>监管认可的注册服务方治理</td><td><code>IdentityRegistryRuntime</code>、<code>IdentityAccountStore</code></td></tr>
+              <tr><td>GUI/LUI 发现界面</td><td><code>AgentInterconnectClient</code>、<code>JsonTransport</code></td></tr>
+              <tr><td>REST、WebSocket、MCP、消息队列</td><td><code>JsonTransport</code>、<code>HttpJsonTransport</code></td></tr>
+              <tr><td>不可篡改审计存储</td><td><code>IdentityAuditEvent</code>、自定义 store</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>验证命令</h2>
+        <pre><code>pnpm install
+pnpm typecheck
+pnpm test
+pnpm build
+pnpm pack --pack-destination /tmp</code></pre>
+      </section>
+    </main>
+
+    <footer>
+      <span>Conformance</span>
+      <span><a href="api.html">API Reference</a></span>
+    </footer>
+  </body>
+</html>
