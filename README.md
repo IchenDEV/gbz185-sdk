@@ -2,6 +2,8 @@
 
 TypeScript SDK and reference runtime for the GB/Z 185-2026 "Artificial intelligence - Agent interconnection" guidance documents.
 
+**Status:** TypeScript SDK is **Beta**. Python, Go, Rust, and Java SDKs are **Alpha experimental** clients/adapters.
+
 This package is intentionally transport-neutral. It models the standard objects and flows as JSON-friendly TypeScript APIs, then exposes them through a pluggable `JsonTransport` interface. The default runtime is in-process and memory-backed so it can be used for development, tests, and protocol experiments.
 
 The SDK exposes every function domain listed in the GB/Z 185.1 reference architecture: identity maintenance, description maintenance, interconnection authorization, interaction, tool access, identity management, credential management, identity authentication, description management, discovery, message distribution, and tool service.
@@ -79,7 +81,7 @@ pnpm pack:check
 
 ## Other Language SDKs
 
-Client SDKs for Python, Go, Rust, and Java live in the repository under [`sdks/`](https://github.com/IchenDEV/gbz185-sdk/tree/main/sdks). They expose the same GB/Z 185 identity-code helpers, JSON transport boundary, operation names, client methods, and conformance constants as the TypeScript package.
+Client SDKs for Python, Go, Rust, and Java live in the repository under [`sdks/`](https://github.com/IchenDEV/gbz185-sdk/tree/main/sdks). They are currently **Alpha experimental** packages. They expose the same GB/Z 185 identity-code helpers, JSON transport boundary, operation names, client methods, and conformance constants as the TypeScript package, but they are not yet marked Beta.
 
 ## Quick Start
 

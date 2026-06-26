@@ -2,7 +2,7 @@
 
 This page is the main reference for using the GB/Z 185 SDK from TypeScript, Python, Go, Rust, and Java.
 
-The TypeScript package is the reference implementation and includes the full in-memory runtime. The Python, Go, Rust, and Java SDKs are client and adapter SDKs: they expose the same identity-code helpers, JSON transport boundary, client operation names, and conformance constants so application teams can call a GB/Z 185 JSON gateway from their language of choice.
+The TypeScript package is the Beta reference implementation and includes the full in-memory runtime. The Python, Go, Rust, and Java SDKs are Alpha experimental client and adapter SDKs: they expose the same identity-code helpers, JSON transport boundary, client operation names, and conformance constants so application teams can call a GB/Z 185 JSON gateway from their language of choice while the non-TypeScript APIs continue to settle.
 
 Website version: https://blogs.idevlab.dev/gbz185-sdk/multi-language.html
 
@@ -10,6 +10,7 @@ Website version: https://blogs.idevlab.dev/gbz185-sdk/multi-language.html
 
 | Capability | TypeScript | Python | Go | Rust | Java |
 | --- | --- | --- | --- | --- | --- |
+| SDK status | Beta | Alpha experimental | Alpha experimental | Alpha experimental | Alpha experimental |
 | Identity-code format/parse/validate | Yes | Yes | Yes | Yes | Yes |
 | JSON transport interface | Yes | Yes | Yes | Yes | Yes |
 | In-process transport for tests | Yes | Yes | Yes | Yes | Yes |
@@ -19,7 +20,7 @@ Website version: https://blogs.idevlab.dev/gbz185-sdk/multi-language.html
 | FRAI-01 through FRAI-10 constants | Yes | Yes | Yes | Yes | Yes |
 | Full in-memory reference runtime | Yes | No | No | No | No |
 
-All non-TypeScript SDKs use JSON objects for GB/Z 185 data models. That keeps the language SDKs thin, stable, and compatible with a shared gateway that accepts:
+All non-TypeScript SDKs use JSON objects for GB/Z 185 data models. That keeps the Alpha language SDKs thin, easy to validate, and compatible with a shared gateway that accepts:
 
 ```json
 {
@@ -43,6 +44,8 @@ All language clients use the same operation names:
 | Tool | `tool.list`, `tool.updates`, `tool.invoke` |
 
 ## TypeScript
+
+Status: **Beta**.
 
 Install from npm:
 
@@ -101,6 +104,8 @@ pnpm prepublishOnly
 ```
 
 ## Python
+
+Status: **Alpha experimental**.
 
 Current repository install:
 
@@ -176,6 +181,8 @@ result = client.invoke_tools({
 
 ## Go
 
+Status: **Alpha experimental**.
+
 Use from the repository:
 
 ```bash
@@ -241,9 +248,11 @@ err := client.InvokeTools(context.Background(), gbz185.JSONObject{
 }, &result)
 ```
 
-Go release note: because this repository uses a Go submodule, stable version tags should use the submodule tag format, for example `sdks/go/v0.1.0`.
+Go release note: because this repository uses a Go submodule, future stable version tags should use the submodule tag format, for example `sdks/go/v0.1.0`.
 
 ## Rust
+
+Status: **Alpha experimental**.
 
 Use locally:
 
@@ -314,6 +323,8 @@ let result = client.invoke_tools(json!({
 ```
 
 ## Java
+
+Status: **Alpha experimental**.
 
 Use locally:
 

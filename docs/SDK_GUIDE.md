@@ -436,4 +436,4 @@ This SDK is a reference implementation and developer toolkit. It intentionally d
 - database schema
 - distributed message broker behavior
 
-Those should be added as application-specific adapters on top of the stable TypeScript interfaces.
+Those should be added as application-specific adapters on top of the Beta TypeScript interfaces.

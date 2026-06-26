@@ -2,7 +2,9 @@
 
 Rust client SDK for GB/Z 185-2026 agent interconnection JSON operations.
 
-The Rust crate is a client/adapter SDK. It provides identity-code helpers, conformance constants, `JsonTransport`, `InProcessJsonTransport`, `HttpJsonTransport`, and `AgentInterconnectClient`. The full in-memory reference runtime lives in the TypeScript package.
+**Status:** Alpha experimental.
+
+The Rust crate is an Alpha client/adapter SDK. It provides identity-code helpers, conformance constants, `JsonTransport`, `InProcessJsonTransport`, `HttpJsonTransport`, and `AgentInterconnectClient`. The full in-memory reference runtime lives in the Beta TypeScript package.
 
 ## Install
 

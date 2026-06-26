@@ -2,7 +2,9 @@
 
 Go client SDK for GB/Z 185-2026 agent interconnection JSON operations.
 
-The Go SDK is a client/adapter SDK. It provides identity-code helpers, conformance constants, `JsonTransport`, `InProcessJsonTransport`, `HttpJsonTransport`, and `AgentInterconnectClient`. The full in-memory reference runtime lives in the TypeScript package.
+**Status:** Alpha experimental.
+
+The Go SDK is an Alpha client/adapter SDK. It provides identity-code helpers, conformance constants, `JsonTransport`, `InProcessJsonTransport`, `HttpJsonTransport`, and `AgentInterconnectClient`. The full in-memory reference runtime lives in the Beta TypeScript package.
 
 ## Install
 
@@ -25,7 +27,7 @@ cd sdks/go
 go test ./...
 ```
 
-For stable Go module releases, tag the submodule with Go's expected format, for example `sdks/go/v0.1.0`.
+For future stable Go module releases, tag the submodule with Go's expected format, for example `sdks/go/v0.1.0`.
 
 ## Identity Code
 

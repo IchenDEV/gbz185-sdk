@@ -54,17 +54,21 @@
         <section class="page-title">
           <h1>多语言 SDK 使用指南</h1>
           <p>这页是 TypeScript、Python、Go、Rust、Java 开发者的统一入口。每种语言都按安装、身份码、传输、客户端调用、工具调用、测试验证的顺序说明。</p>
+          <div class="callout">
+            <p><strong>当前成熟度：</strong> TypeScript SDK 为 <strong>Beta</strong>；Python、Go、Rust、Java SDK 为 <strong>Alpha 实验中</strong>。</p>
+          </div>
         </section>
 
         <section id="overview" class="section">
           <h2>定位</h2>
-          <p>TypeScript 是参考实现，包含完整内存运行时。Python、Go、Rust、Java 是客户端和适配 SDK，负责在各自语言里生成身份码、发送标准 JSON operation、调用统一客户端方法，并复用国标覆盖常量。</p>
+          <p>TypeScript 是 Beta 参考实现，包含完整内存运行时。Python、Go、Rust、Java 是 Alpha 实验中的客户端和适配 SDK，负责在各自语言里生成身份码、发送标准 JSON operation、调用统一客户端方法，并复用国标覆盖常量。</p>
           <div class="table-wrap">
             <table>
               <thead>
                 <tr><th>能力</th><th>TypeScript</th><th>Python</th><th>Go</th><th>Rust</th><th>Java</th></tr>
               </thead>
               <tbody>
+                <tr><td>SDK 成熟度</td><td>Beta</td><td>Alpha 实验中</td><td>Alpha 实验中</td><td>Alpha 实验中</td><td>Alpha 实验中</td></tr>
                 <tr><td>身份码解析、格式化、校验</td><td>支持</td><td>支持</td><td>支持</td><td>支持</td><td>支持</td></tr>
                 <tr><td>统一 JSON transport</td><td>支持</td><td>支持</td><td>支持</td><td>支持</td><td>支持</td></tr>
                 <tr><td>进程内 transport</td><td>支持</td><td>支持</td><td>支持</td><td>支持</td><td>支持</td></tr>
@@ -118,7 +122,7 @@
 
         <section id="typescript" class="section">
           <h2>TypeScript</h2>
-          <p>TypeScript 包是参考实现，适合直接跑完整国标流程，也适合作为其他语言服务端网关的实现基础。</p>
+          <p><strong>状态：</strong> Beta。TypeScript 包是参考实现，适合直接跑完整国标流程，也适合作为其他语言服务端网关的实现基础。</p>
           <h3>安装</h3>
           <pre><code data-lang="shell">npm install gbz185-sdk</code></pre>
           <h3>身份码</h3>
@@ -169,7 +173,7 @@ pnpm prepublishOnly</code></pre>
 
         <section id="python" class="section">
           <h2>Python</h2>
-          <p>Python SDK 适合把 Python 服务、脚本、数据处理任务或智能体后端接入 GB/Z 185 JSON gateway。</p>
+          <p><strong>状态：</strong> Alpha 实验中。Python SDK 适合把 Python 服务、脚本、数据处理任务或智能体后端接入 GB/Z 185 JSON gateway。</p>
           <h3>安装</h3>
           <pre><code data-lang="shell">python -m pip install "git+https://github.com/IchenDEV/gbz185-sdk.git#subdirectory=sdks/python"</code></pre>
           <pre><code data-lang="shell">cd sdks/python
@@ -232,7 +236,7 @@ result = client.invoke_tools({
 
         <section id="go" class="section">
           <h2>Go</h2>
-          <p>Go SDK 适合在网关、后端服务、微服务和 CLI 中调用 GB/Z 185 operation。所有方法都接收 context，并把结果解码到调用方提供的 out 参数。</p>
+          <p><strong>状态：</strong> Alpha 实验中。Go SDK 适合在网关、后端服务、微服务和 CLI 中调用 GB/Z 185 operation。所有方法都接收 context，并把结果解码到调用方提供的 out 参数。</p>
           <h3>安装</h3>
           <pre><code data-lang="shell">go get github.com/IchenDEV/gbz185-sdk/sdks/go/gbz185@main</code></pre>
           <pre><code data-lang="go">import "github.com/IchenDEV/gbz185-sdk/sdks/go/gbz185"</code></pre>
@@ -295,7 +299,7 @@ go test ./...</code></pre>
 
         <section id="rust" class="section">
           <h2>Rust</h2>
-          <p>Rust crate 适合在高可靠服务、代理、边缘网关或命令行工具中调用标准 GB/Z 185 JSON operation。模型载荷使用 serde_json::Value，方便和网关协议保持一致。</p>
+          <p><strong>状态：</strong> Alpha 实验中。Rust crate 适合在高可靠服务、代理、边缘网关或命令行工具中调用标准 GB/Z 185 JSON operation。模型载荷使用 serde_json::Value，方便和网关协议保持一致。</p>
           <h3>安装</h3>
           <pre><code data-lang="toml">[dependencies]
 gbz185-sdk = { path = "../gbz185-sdk/sdks/rust" }</code></pre>
@@ -360,7 +364,7 @@ cargo package --allow-dirty</code></pre>
 
         <section id="java" class="section">
           <h2>Java</h2>
-          <p>Java SDK 适合 Spring、Quarkus、Micronaut、传统后端或 JVM 网关。客户端返回 Jackson JsonNode，输入可以是 Map、List、POJO 或 JsonNode。</p>
+          <p><strong>状态：</strong> Alpha 实验中。Java SDK 适合 Spring、Quarkus、Micronaut、传统后端或 JVM 网关。客户端返回 Jackson JsonNode，输入可以是 Map、List、POJO 或 JsonNode。</p>
           <h3>安装</h3>
           <pre><code data-lang="shell">cd sdks/java
 mvn install</code></pre>
@@ -417,13 +421,13 @@ mvn test</code></pre>
           <h2>发布边界</h2>
           <div class="table-wrap">
             <table>
-              <thead><tr><th>语言</th><th>当前推荐使用方式</th><th>正式仓库发布说明</th></tr></thead>
+              <thead><tr><th>语言</th><th>成熟度</th><th>当前推荐使用方式</th><th>正式仓库发布说明</th></tr></thead>
               <tbody>
-                <tr><td>TypeScript</td><td><code>npm install gbz185-sdk</code></td><td>npm 包已经是首个公开分发入口。</td></tr>
-                <tr><td>Python</td><td>GitHub subdirectory 或本地路径安装</td><td>发布 PyPI 后使用 <code>python -m pip install gbz185-sdk</code>。</td></tr>
-                <tr><td>Go</td><td><code>go get github.com/IchenDEV/gbz185-sdk/sdks/go/gbz185@main</code></td><td>Go 子模块稳定版本应使用 <code>sdks/go/v0.1.0</code> 这类 tag。</td></tr>
-                <tr><td>Rust</td><td>本地 path dependency</td><td>发布 crates.io 后使用 <code>gbz185-sdk = "0.1.0"</code>。</td></tr>
-                <tr><td>Java</td><td><code>mvn install</code> 后依赖本地 artifact</td><td>发布 Maven Central 前可接企业私有 Maven 仓库。</td></tr>
+                <tr><td>TypeScript</td><td>Beta</td><td><code>npm install gbz185-sdk</code></td><td>npm 包已经是首个公开分发入口。</td></tr>
+                <tr><td>Python</td><td>Alpha 实验中</td><td>GitHub subdirectory 或本地路径安装</td><td>发布 PyPI 后使用 <code>python -m pip install gbz185-sdk</code>。</td></tr>
+                <tr><td>Go</td><td>Alpha 实验中</td><td><code>go get github.com/IchenDEV/gbz185-sdk/sdks/go/gbz185@main</code></td><td>Go 子模块未来稳定版本应使用 <code>sdks/go/v0.1.0</code> 这类 tag。</td></tr>
+                <tr><td>Rust</td><td>Alpha 实验中</td><td>本地 path dependency</td><td>发布 crates.io 后使用 <code>gbz185-sdk = "0.1.0"</code>。</td></tr>
+                <tr><td>Java</td><td>Alpha 实验中</td><td><code>mvn install</code> 后依赖本地 artifact</td><td>发布 Maven Central 前可接企业私有 Maven 仓库。</td></tr>
               </tbody>
             </table>
           </div>
