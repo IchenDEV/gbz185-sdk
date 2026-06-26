@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="gbz185-sdk icon">
+  <rect width="64" height="64" rx="14" fill="#1565c0"/>
+  <path d="M18 18h17c7 0 12 5 12 12s-5 12-12 12H26v8h-8V18Zm8 8v8h9c3 0 5-2 5-4s-2-4-5-4h-9Z" fill="#fff"/>
+  <path d="M14 48h36v4H14z" fill="#7ed6c4"/>
+</svg>
