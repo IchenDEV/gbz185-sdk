@@ -4,3 +4,10 @@ coverage/
 *.tsbuildinfo
 .env
 .env.*
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+target/
+sdks/rust/Cargo.lock
+*.class

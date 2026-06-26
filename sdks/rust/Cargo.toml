@@ -1,0 +1,12 @@
+[package]
+name = "gbz185-sdk"
+version = "0.1.0"
+edition = "2021"
+description = "Rust client SDK for GB/Z 185-2026 agent interconnection JSON operations."
+license = "MIT"
+repository = "https://github.com/IchenDEV/gbz185-sdk"
+homepage = "https://blogs.idevlab.dev/gbz185-sdk/"
+
+[dependencies]
+serde_json = "1"
+ureq = { version = "2", features = ["json"] }

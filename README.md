@@ -72,8 +72,13 @@ pnpm pack:check
 - SDK guide: [`docs/SDK_GUIDE.md`](docs/SDK_GUIDE.md)
 - API reference: [`docs/API_REFERENCE.md`](docs/API_REFERENCE.md)
 - GB/Z 185 conformance matrix: [`docs/CONFORMANCE.md`](docs/CONFORMANCE.md)
+- Multi-language SDKs: [`docs/MULTI_LANGUAGE_SDKS.md`](docs/MULTI_LANGUAGE_SDKS.md)
 - npm release checklist: [`docs/NPM_RELEASE.md`](docs/NPM_RELEASE.md)
 - GitHub Pages deployment notes: [`docs/GITHUB_PAGES.md`](docs/GITHUB_PAGES.md)
+
+## Other Language SDKs
+
+Client SDKs for Python, Go, Rust, and Java live in the repository under [`sdks/`](https://github.com/IchenDEV/gbz185-sdk/tree/main/sdks). They expose the same GB/Z 185 identity-code helpers, JSON transport boundary, operation names, client methods, and conformance constants as the TypeScript package.
 
 ## Quick Start
 

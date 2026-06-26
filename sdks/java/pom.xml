@@ -1,0 +1,62 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>dev.idevlab</groupId>
+  <artifactId>gbz185-sdk</artifactId>
+  <version>0.1.0</version>
+  <name>gbz185-sdk</name>
+  <description>Java client SDK for GB/Z 185-2026 agent interconnection JSON operations.</description>
+  <url>https://blogs.idevlab.dev/gbz185-sdk/</url>
+
+  <licenses>
+    <license>
+      <name>MIT License</name>
+      <url>https://opensource.org/license/mit</url>
+    </license>
+  </licenses>
+
+  <developers>
+    <developer>
+      <name>IchenDEV</name>
+    </developer>
+  </developers>
+
+  <scm>
+    <connection>scm:git:https://github.com/IchenDEV/gbz185-sdk.git</connection>
+    <developerConnection>scm:git:https://github.com/IchenDEV/gbz185-sdk.git</developerConnection>
+    <url>https://github.com/IchenDEV/gbz185-sdk</url>
+  </scm>
+
+  <properties>
+    <maven.compiler.release>17</maven.compiler.release>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <jackson.version>2.17.3</jackson.version>
+    <junit.version>5.10.3</junit.version>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-databind</artifactId>
+      <version>${jackson.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter</artifactId>
+      <version>${junit.version}</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>3.3.1</version>
+      </plugin>
+    </plugins>
+  </build>
+</project>

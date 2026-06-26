@@ -1,0 +1,25 @@
+[build-system]
+requires = ["hatchling>=1.25"]
+build-backend = "hatchling.build"
+
+[project]
+name = "gbz185-sdk"
+version = "0.1.0"
+description = "Python client SDK for GB/Z 185-2026 agent interconnection JSON operations."
+readme = "README.md"
+requires-python = ">=3.10"
+license = "MIT"
+authors = [{ name = "IchenDEV" }]
+keywords = ["gbz185", "agent", "sdk", "interconnection"]
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3 :: Only",
+  "Typing :: Typed"
+]
+
+[project.urls]
+Homepage = "https://blogs.idevlab.dev/gbz185-sdk/"
+Repository = "https://github.com/IchenDEV/gbz185-sdk"
+
+[tool.hatch.build.targets.wheel]
+packages = ["gbz185_sdk"]
