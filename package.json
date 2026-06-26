@@ -2,7 +2,7 @@
   "name": "gbz185-sdk",
   "version": "0.1.0",
   "description": "TypeScript SDK and reference runtime for GB/Z 185-2026 AI agent interconnection.",
-  "homepage": "https://ichendev.github.io/gbz185-sdk/",
+  "homepage": "https://blogs.idevlab.dev/gbz185-sdk/",
   "repository": {
     "type": "git",
     "url": "https://github.com/IchenDEV/gbz185-sdk.git"

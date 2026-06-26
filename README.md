@@ -49,7 +49,7 @@ pnpm build
 
 ## Documentation
 
-- Online documentation: https://ichendev.github.io/gbz185-sdk/
+- Online documentation: https://blogs.idevlab.dev/gbz185-sdk/
 - SDK guide: [`docs/SDK_GUIDE.md`](docs/SDK_GUIDE.md)
 - API reference: [`docs/API_REFERENCE.md`](docs/API_REFERENCE.md)
 - GB/Z 185 conformance matrix: [`docs/CONFORMANCE.md`](docs/CONFORMANCE.md)
