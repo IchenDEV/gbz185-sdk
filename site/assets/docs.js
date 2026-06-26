@@ -30,6 +30,10 @@ const PAGE_META = {
     zh: { title: "Examples | gbz185-sdk", description: "gbz185-sdk 端到端、身份、鉴别、HTTP、群组和工具调用示例。" },
     en: { title: "Examples | gbz185-sdk", description: "End-to-end, identity, authentication, HTTP, group messaging, and tool invocation examples for gbz185-sdk." }
   },
+  "multi-language.html": {
+    zh: { title: "多语言 SDK | gbz185-sdk", description: "gbz185-sdk TypeScript、Python、Go、Rust、Java 多语言使用指南。" },
+    en: { title: "Multi-Language SDKs | gbz185-sdk", description: "Usage guide for the TypeScript, Python, Go, Rust, and Java gbz185-sdk packages." }
+  },
   "conformance.html": {
     zh: { title: "国标对照 | gbz185-sdk", description: "GB/Z 185.1-185.7 标准功能与 gbz185-sdk API 对照矩阵。" },
     en: { title: "Conformance | gbz185-sdk", description: "GB/Z 185.1-185.7 function and API conformance matrix for gbz185-sdk." }
@@ -43,6 +47,7 @@ const ZH_TO_EN = {
   "；": "; ",
   "：": ":",
   "国标对照": "Conformance",
+  "多语言 SDK": "Multi-Language SDKs",
   "GB/Z 185 智能体互联 SDK 开发者文档": "GB/Z 185 Agent Interconnection SDK Developer Docs",
   "这里就是开发者使用": "This is the main documentation entry for developers using",
   "的主文档入口：从安装、初始化、端到端运行，到每个公开 API、接口、类型和示例，全部可以在网页内直接查到。": " for installation, initialization, end-to-end runs, and every public API, interface, type, and example directly on this site.",
@@ -54,6 +59,9 @@ const ZH_TO_EN = {
   "进入快速开始": "Open Get Started",
   "每个函数、类、接口、输入输出模型都有签名、用途、入参、返回值和注意事项。": "Every function, class, interface, and input/output model includes its signature, purpose, parameters, return value, and notes.",
   "进入 API Reference": "Open API Reference",
+  "4. 多语言 SDK": "4. Multi-Language SDKs",
+  "Python、Go、Rust、Java 和 TypeScript 的安装、客户端、传输、工具调用和发布边界统一放在这里。": "Installation, clients, transports, tool invocation, and release boundaries for Python, Go, Rust, Java, and TypeScript are collected here.",
+  "进入多语言 SDK": "Open Multi-Language SDKs",
   "SDK 覆盖哪些运行链路": "Runtime Flows Covered by the SDK",
   "链路": "Flow",
   "关键 API": "Key APIs",
@@ -372,6 +380,60 @@ const ZH_TO_EN = {
   "这个模式适合工具返回“还没完成，需要下一轮输入”的场景。SDK 不规定完成判断，你用": "This pattern fits tools that return not-complete-yet states and need another input round. The SDK does not define completion; use",
   "写业务条件。": "to express your business condition.",
   "Next: 国标对照": "Next: Conformance",
+  "Next: 多语言 SDK": "Next: Multi-Language SDKs",
+
+  "定位": "Positioning",
+  "共享协议": "Shared Contract",
+  "Operation 列表": "Operation List",
+  "发布边界": "Release Boundaries",
+  "多语言 SDK 使用指南": "Multi-Language SDK Usage Guide",
+  "这页是 TypeScript、Python、Go、Rust、Java 开发者的统一入口。每种语言都按安装、身份码、传输、客户端调用、工具调用、测试验证的顺序说明。": "This is the unified entry point for TypeScript, Python, Go, Rust, and Java developers. Each language is documented in the order of install, identity code, transport, client call, tool invocation, and verification.",
+  "TypeScript 是参考实现，包含完整内存运行时。Python、Go、Rust、Java 是客户端和适配 SDK，负责在各自语言里生成身份码、发送标准 JSON operation、调用统一客户端方法，并复用国标覆盖常量。": "TypeScript is the reference implementation and includes the full in-memory runtime. Python, Go, Rust, and Java are client and adapter SDKs for generating identity codes, sending standard JSON operations, calling unified client methods, and reusing conformance constants.",
+  "能力": "Capability",
+  "身份码解析、格式化、校验": "Identity-code parse, format, and validate",
+  "统一 JSON transport": "Unified JSON transport",
+  "进程内 transport": "In-process transport",
+  "HTTP JSON transport": "HTTP JSON transport",
+  "统一客户端方法": "Unified client methods",
+  "GB/Z 185.1 功能常量": "GB/Z 185.1 function constants",
+  "FRAI-01 到 FRAI-10 常量": "FRAI-01 to FRAI-10 constants",
+  "完整内存参考运行时": "Full in-memory reference runtime",
+  "支持": "Yes",
+  "不内置": "Not built in",
+  "如果你要在单进程里跑完整 GB/Z 185 链路，用 TypeScript 运行时。如果你的服务已经有自己的后端，只需要从 Python、Go、Rust 或 Java 调一个标准网关，用对应语言 SDK。": "Use the TypeScript runtime when you need the complete GB/Z 185 flow in one process. Use the language SDK when your service already has a backend and only needs to call a standard gateway from Python, Go, Rust, or Java.",
+  "所有语言的客户端都只依赖同一种请求信封。SDK 不规定 REST 路径、WebSocket 消息名或 MCP 方法名；你只需要把 operation 和 payload 交给自己的网关。": "All language clients depend on the same request envelope. The SDK does not prescribe REST paths, WebSocket message names, or MCP method names; pass operation and payload to your own gateway.",
+  "服务端返回标准 JSON 对象或数组。HTTP transport 会把响应体作为 JSON 解析；进程内 transport 会直接返回 handler 的结果。": "The server returns a standard JSON object or array. HTTP transport parses the response body as JSON; in-process transport returns the handler result directly.",
+  "领域": "Domain",
+  "客户端方法": "Client Method",
+  "按智能体身份码读取账户。": "Reads an account by agent identity code.",
+  "身份账户锁定、解锁和注销。": "Locks, unlocks, and revokes identity accounts.",
+  "描述发布、下架和撤销。": "Publishes, unpublishes, and revokes descriptions.",
+  "按自然语言、身份码、名称、技能、标签、IO 类型和可用性发现。": "Discovers by natural language, identity code, name, skills, tags, IO types, and availability.",
+  "提交任务、发送消息、标记最终结果。": "Submits tasks, sends messages, and marks final results.",
+  "群组消息分发。": "Group message distribution.",
+  "工具列表、工具更新和批量工具调用。": "Tool list, tool updates, and batch tool invocation.",
+  "安装": "Install",
+  "HTTP 网关客户端": "HTTP Gateway Client",
+  "验证": "Verify",
+  "完整内存运行时": "Full In-Memory Runtime",
+  "TypeScript 包是参考实现，适合直接跑完整国标流程，也适合作为其他语言服务端网关的实现基础。": "The TypeScript package is the reference implementation. It can run the full standard flow directly and can also serve as the implementation base for a gateway used by other languages.",
+  "Python SDK 适合把 Python 服务、脚本、数据处理任务或智能体后端接入 GB/Z 185 JSON gateway。": "The Python SDK is suitable for connecting Python services, scripts, data jobs, or agent backends to a GB/Z 185 JSON gateway.",
+  "Go SDK 适合在网关、后端服务、微服务和 CLI 中调用 GB/Z 185 operation。所有方法都接收 context，并把结果解码到调用方提供的 out 参数。": "The Go SDK is suitable for gateways, backend services, microservices, and CLIs that call GB/Z 185 operations. Every method accepts a context and decodes into the caller-provided out parameter.",
+  "Rust crate 适合在高可靠服务、代理、边缘网关或命令行工具中调用标准 GB/Z 185 JSON operation。模型载荷使用 serde_json::Value，方便和网关协议保持一致。": "The Rust crate fits reliable services, proxies, edge gateways, and command-line tools that call standard GB/Z 185 JSON operations. Model payloads use serde_json::Value to stay aligned with the gateway contract.",
+  "Java SDK 适合 Spring、Quarkus、Micronaut、传统后端或 JVM 网关。客户端返回 Jackson JsonNode，输入可以是 Map、List、POJO 或 JsonNode。": "The Java SDK fits Spring, Quarkus, Micronaut, traditional backends, and JVM gateways. The client returns Jackson JsonNode values, and inputs can be Map, List, POJO, or JsonNode.",
+  "语言": "Language",
+  "当前推荐使用方式": "Recommended Current Usage",
+  "正式仓库发布说明": "Registry Release Notes",
+  "npm 包已经是首个公开分发入口。": "The npm package is already the first public distribution entry.",
+  "GitHub subdirectory 或本地路径安装": "GitHub subdirectory or local path install",
+  "发布 PyPI 后使用": "After PyPI publication, use",
+  "Go 子模块稳定版本应使用": "Stable Go submodule versions should use",
+  "这类 tag。": "tags.",
+  "本地 path dependency": "Local path dependency",
+  "发布 crates.io 后使用": "After crates.io publication, use",
+  "后依赖本地 artifact": "then depend on the local artifact",
+  "发布 Maven Central 前可接企业私有 Maven 仓库。": "Before Maven Central publication, use a private enterprise Maven repository.",
+  "非 TypeScript SDK 当前是客户端和适配层，不内置完整内存运行时。生产环境的身份治理、证书策略、数据库、审计、HTTP 路由和权限控制仍应由你的服务端实现。": "Non-TypeScript SDKs are currently client and adapter layers; they do not include the full in-memory runtime. Production identity governance, certificate policy, databases, audit, HTTP routing, and authorization controls should still be implemented on your server.",
 
   "覆盖摘要": "Coverage Summary",
   "功能域": "Function Domains",
@@ -626,11 +688,29 @@ function escapeHtml(value) {
 
 function inferCodeLanguage(source) {
   const trimmed = source.trim();
+  if (/^<[^>]+>/.test(trimmed)) {
+    return "xml";
+  }
   if (trimmed.startsWith("{") || trimmed.startsWith("[") || trimmed.includes('"compilerOptions"')) {
     return "json";
   }
-  if (/^(pnpm|npm|git|cd|node|curl|gh)\b/m.test(trimmed) || trimmed.includes("\n# ")) {
+  if (trimmed.includes("[dependencies]")) {
+    return "toml";
+  }
+  if (/^(pnpm|npm|git|cd|node|curl|gh|python|go|cargo|mvn|javac|gradle)\b/m.test(trimmed) || trimmed.includes("\n# ")) {
     return "shell";
+  }
+  if (/\b(from\s+gbz185_sdk\s+import|def\s+\w+\(|print\()/.test(trimmed)) {
+    return "python";
+  }
+  if (/\b(package\s+\w+|func\s+\w+\(|context\.Background\(\)|gbz185\.)/.test(trimmed)) {
+    return "go";
+  }
+  if (/\b(use\s+gbz185_sdk|let\s+\w+\s*=|serde_json::json|Ok\(json!)/.test(trimmed)) {
+    return "rust";
+  }
+  if (/\b(import\s+dev\.idevlab|new\s+AgentIdentityCodeParts|JsonNode|Map\.of)/.test(trimmed)) {
+    return "java";
   }
   return "ts";
 }
@@ -652,9 +732,18 @@ function highlightSource(source, language) {
   });
 
   let html = escapeHtml(protectedSource);
-  const keywordPattern = language === "shell"
-    ? /\b(pnpm|npm|git|cd|node|curl|gh|echo|export)\b/g
-    : /\b(await|async|const|let|var|import|from|type|new|return|if|throw|true|false|null|undefined|class|interface|extends|implements|function)\b/g;
+  const keywordPatterns = {
+    shell: /\b(pnpm|npm|git|cd|node|curl|gh|python|go|cargo|mvn|javac|gradle|echo|export)\b/g,
+    python: /\b(from|import|def|class|return|if|else|elif|True|False|None|lambda|assert|print)\b/g,
+    go: /\b(package|import|func|return|if|else|var|const|type|struct|map|nil|true|false)\b/g,
+    rust: /\b(use|let|mut|fn|pub|struct|impl|return|if|else|true|false|Ok|Err|Result)\b/g,
+    java: /\b(import|public|private|final|class|new|return|if|else|true|false|null|String|boolean|var)\b/g,
+    json: /\b(true|false|null)\b/g,
+    toml: /\b(true|false)\b/g,
+    xml: /\b\B/g,
+    ts: /\b(await|async|const|let|var|import|from|type|new|return|if|throw|true|false|null|undefined|class|interface|extends|implements|function)\b/g
+  };
+  const keywordPattern = keywordPatterns[language] ?? keywordPatterns.ts;
   html = html.replace(keywordPattern, '<span class="tok-keyword">$1</span>');
   html = html.replace(/\b([A-Z][A-Za-z0-9_]+)\b/g, '<span class="tok-type">$1</span>');
   html = html.replace(/\b([a-zA-Z_$][\w$]*)(?=\()/g, '<span class="tok-function">$1</span>');

@@ -1,0 +1,442 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>多语言 SDK | gbz185-sdk</title>
+    <meta name="description" content="gbz185-sdk TypeScript、Python、Go、Rust、Java 多语言使用指南。" />
+    <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="assets/styles.css?v=20260626-i18n" />
+    <script src="assets/docs.js?v=20260627-multilang" defer></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">跳到主要内容</a>
+    <header class="site-header">
+      <a class="brand" href="index.html">gbz185-sdk</a>
+      <div class="site-header-right">
+        <nav aria-label="主导航">
+          <a href="setup.html">Setup</a>
+          <a href="getting-started.html">Get Started</a>
+          <a href="api.html">API Reference</a>
+          <a href="examples.html">Examples</a>
+          <a href="multi-language.html">多语言 SDK</a>
+          <a href="conformance.html">国标对照</a>
+          <a href="https://github.com/IchenDEV/gbz185-sdk">GitHub</a>
+        </nav>
+        <div class="display-controls" aria-label="显示偏好">
+          <div class="segmented-control" data-control-group="language" role="group" aria-label="语言">
+            <button type="button" data-lang-toggle="zh" aria-pressed="true">中文</button>
+            <button type="button" data-lang-toggle="en" aria-pressed="false">EN</button>
+          </div>
+          <div class="segmented-control" data-control-group="theme" role="group" aria-label="主题">
+            <button type="button" data-theme-toggle="light" aria-pressed="true">浅色</button>
+            <button type="button" data-theme-toggle="dark" aria-pressed="false">深色</button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main id="main-content" class="docs-layout">
+      <aside class="docs-sidebar">
+        <strong>多语言 SDK</strong>
+        <a href="#overview">定位</a>
+        <a href="#shared-contract">共享协议</a>
+        <a href="#operations">Operation 列表</a>
+        <a href="#typescript">TypeScript</a>
+        <a href="#python">Python</a>
+        <a href="#go">Go</a>
+        <a href="#rust">Rust</a>
+        <a href="#java">Java</a>
+        <a href="#release">发布边界</a>
+      </aside>
+
+      <div class="docs-content">
+        <section class="page-title">
+          <h1>多语言 SDK 使用指南</h1>
+          <p>这页是 TypeScript、Python、Go、Rust、Java 开发者的统一入口。每种语言都按安装、身份码、传输、客户端调用、工具调用、测试验证的顺序说明。</p>
+        </section>
+
+        <section id="overview" class="section">
+          <h2>定位</h2>
+          <p>TypeScript 是参考实现，包含完整内存运行时。Python、Go、Rust、Java 是客户端和适配 SDK，负责在各自语言里生成身份码、发送标准 JSON operation、调用统一客户端方法，并复用国标覆盖常量。</p>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr><th>能力</th><th>TypeScript</th><th>Python</th><th>Go</th><th>Rust</th><th>Java</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>身份码解析、格式化、校验</td><td>支持</td><td>支持</td><td>支持</td><td>支持</td><td>支持</td></tr>
+                <tr><td>统一 JSON transport</td><td>支持</td><td>支持</td><td>支持</td><td>支持</td><td>支持</td></tr>
+                <tr><td>进程内 transport</td><td>支持</td><td>支持</td><td>支持</td><td>支持</td><td>支持</td></tr>
+                <tr><td>HTTP JSON transport</td><td>支持</td><td>支持</td><td>支持</td><td>支持</td><td>支持</td></tr>
+                <tr><td>统一客户端方法</td><td>支持</td><td>支持</td><td>支持</td><td>支持</td><td>支持</td></tr>
+                <tr><td>GB/Z 185.1 功能常量</td><td>支持</td><td>支持</td><td>支持</td><td>支持</td><td>支持</td></tr>
+                <tr><td>FRAI-01 到 FRAI-10 常量</td><td>支持</td><td>支持</td><td>支持</td><td>支持</td><td>支持</td></tr>
+                <tr><td>完整内存参考运行时</td><td>支持</td><td>不内置</td><td>不内置</td><td>不内置</td><td>不内置</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="callout">
+            <p>如果你要在单进程里跑完整 GB/Z 185 链路，用 TypeScript 运行时。如果你的服务已经有自己的后端，只需要从 Python、Go、Rust 或 Java 调一个标准网关，用对应语言 SDK。</p>
+          </div>
+        </section>
+
+        <section id="shared-contract" class="section">
+          <h2>共享协议</h2>
+          <p>所有语言的客户端都只依赖同一种请求信封。SDK 不规定 REST 路径、WebSocket 消息名或 MCP 方法名；你只需要把 operation 和 payload 交给自己的网关。</p>
+          <pre><code data-lang="json">{
+  "operation": "discovery.discover",
+  "payload": {
+    "text": "calendar schedule",
+    "requiredSkills": ["schedule.add"]
+  }
+}</code></pre>
+          <p>服务端返回标准 JSON 对象或数组。HTTP transport 会把响应体作为 JSON 解析；进程内 transport 会直接返回 handler 的结果。</p>
+        </section>
+
+        <section id="operations" class="section">
+          <h2>Operation 列表</h2>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>领域</th><th>Operation</th><th>客户端方法</th><th>说明</th></tr></thead>
+              <tbody>
+                <tr><td>Identity</td><td><code>identity.register</code></td><td><code>registerIdentity</code> / <code>register_identity</code></td><td>注册身份账户，可选发行开发凭证。</td></tr>
+                <tr><td>Identity</td><td><code>identity.get</code></td><td><code>getIdentity</code> / <code>get_identity</code></td><td>按智能体身份码读取账户。</td></tr>
+                <tr><td>Identity</td><td><code>identity.issueCredential</code></td><td><code>issueCredential</code> / <code>issue_credential</code></td><td>给已有身份账户发行凭证。</td></tr>
+                <tr><td>Identity</td><td><code>identity.lock</code>, <code>identity.unlock</code>, <code>identity.revoke</code></td><td><code>lockIdentity</code>, <code>unlockIdentity</code>, <code>revokeIdentity</code></td><td>身份账户锁定、解锁和注销。</td></tr>
+                <tr><td>Description</td><td><code>description.register</code></td><td><code>registerDescription</code> / <code>register_description</code></td><td>注册并校验智能体描述。</td></tr>
+                <tr><td>Description</td><td><code>description.publish</code>, <code>description.unpublish</code>, <code>description.revoke</code></td><td><code>publishDescription</code>, <code>unpublishDescription</code>, <code>revokeDescription</code></td><td>描述发布、下架和撤销。</td></tr>
+                <tr><td>Discovery</td><td><code>discovery.discover</code></td><td><code>discover</code></td><td>按自然语言、身份码、名称、技能、标签、IO 类型和可用性发现。</td></tr>
+                <tr><td>Interaction</td><td><code>interaction.createSession</code></td><td><code>createSession</code> / <code>create_session</code></td><td>创建点对点、群组或混合会话。</td></tr>
+                <tr><td>Interaction</td><td><code>interaction.submitTask</code>, <code>interaction.sendMessage</code></td><td><code>submitTask</code>, <code>sendMessage</code></td><td>提交任务、发送消息、标记最终结果。</td></tr>
+                <tr><td>Interaction</td><td><code>interaction.distributeMessage</code></td><td><code>distributeMessage</code> / <code>distribute_message</code></td><td>群组消息分发。</td></tr>
+                <tr><td>Tool</td><td><code>tool.list</code>, <code>tool.updates</code>, <code>tool.invoke</code></td><td><code>listTools</code>, <code>syncToolUpdates</code>, <code>invokeTools</code></td><td>工具列表、工具更新和批量工具调用。</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section id="typescript" class="section">
+          <h2>TypeScript</h2>
+          <p>TypeScript 包是参考实现，适合直接跑完整国标流程，也适合作为其他语言服务端网关的实现基础。</p>
+          <h3>安装</h3>
+          <pre><code data-lang="shell">npm install gbz185-sdk</code></pre>
+          <h3>身份码</h3>
+          <pre><code data-lang="ts">import { formatIdentityCode, parseIdentityCode, validateIdentityCode } from "gbz185-sdk";
+
+const agentId = formatIdentityCode({
+  registrationServiceProvider: "A1",
+  registrationRequester: "REQ001",
+  ontologySerial: "CALENDAR",
+  instanceSerial: "1"
+});
+
+console.log(agentId);
+console.log(validateIdentityCode(agentId));
+console.log(parseIdentityCode(agentId).registrationRequester);</code></pre>
+          <h3>完整内存运行时</h3>
+          <pre><code data-lang="ts">import { createAgentInterconnectRuntime } from "gbz185-sdk";
+
+const runtime = createAgentInterconnectRuntime();
+const results = await runtime.client.discover({
+  text: "calendar schedule",
+  requiredSkills: ["schedule.add"]
+});</code></pre>
+          <h3>HTTP 网关客户端</h3>
+          <pre><code data-lang="ts">import { AgentInterconnectClient, HttpJsonTransport } from "gbz185-sdk";
+
+const client = new AgentInterconnectClient(
+  new HttpJsonTransport({
+    endpoint: "https://api.example.com/gbz185",
+    headers: { authorization: "Bearer token" }
+  })
+);
+
+const result = await client.invokeTools({
+  sessionId: "session-1",
+  toolInvokeList: [
+    {
+      toolId: "calendar.add",
+      toolVersion: "1.0.0",
+      toolInputParam: { date: "2026-06-27", time: "10:00", event: "review" }
+    }
+  ]
+});</code></pre>
+          <h3>验证</h3>
+          <pre><code data-lang="shell">pnpm install
+pnpm prepublishOnly</code></pre>
+        </section>
+
+        <section id="python" class="section">
+          <h2>Python</h2>
+          <p>Python SDK 适合把 Python 服务、脚本、数据处理任务或智能体后端接入 GB/Z 185 JSON gateway。</p>
+          <h3>安装</h3>
+          <pre><code data-lang="shell">python -m pip install "git+https://github.com/IchenDEV/gbz185-sdk.git#subdirectory=sdks/python"</code></pre>
+          <pre><code data-lang="shell">cd sdks/python
+python -m pip install .
+python -m unittest discover -s tests
+python examples/basic_client.py</code></pre>
+          <h3>身份码</h3>
+          <pre><code data-lang="python">from gbz185_sdk import AgentIdentityCodeParts, format_identity_code, parse_identity_code, validate_identity_code
+
+agent_id = format_identity_code(
+    AgentIdentityCodeParts(
+        registration_service_provider="A1",
+        registration_requester="REQ001",
+        ontology_serial="CALENDAR",
+        instance_serial="1",
+    )
+)
+
+print(agent_id)
+print(validate_identity_code(agent_id))
+print(parse_identity_code(agent_id).registration_requester)</code></pre>
+          <h3>进程内 transport</h3>
+          <pre><code data-lang="python">from gbz185_sdk import AgentInterconnectClient, InProcessJsonTransport
+
+transport = InProcessJsonTransport()
+transport.register(
+    "discovery.discover",
+    lambda payload: [
+        {
+            "description": {"agentId": "agent-1", "name": "Calendar Agent"},
+            "score": 1,
+            "matchedBy": ["text"],
+        }
+    ],
+)
+
+client = AgentInterconnectClient(transport)
+results = client.discover({"text": "calendar schedule"})</code></pre>
+          <h3>HTTP 网关客户端</h3>
+          <pre><code data-lang="python">from gbz185_sdk import AgentInterconnectClient, HttpJsonTransport
+
+client = AgentInterconnectClient(
+    HttpJsonTransport(
+        "https://api.example.com/gbz185",
+        headers={"authorization": "Bearer token"},
+    )
+)
+
+result = client.invoke_tools({
+    "sessionId": "session-1",
+    "toolInvokeList": [
+        {
+            "toolId": "calendar.add",
+            "toolVersion": "1.0.0",
+            "toolInputParam": {"date": "2026-06-27", "time": "10:00", "event": "review"},
+        }
+    ],
+})</code></pre>
+        </section>
+
+        <section id="go" class="section">
+          <h2>Go</h2>
+          <p>Go SDK 适合在网关、后端服务、微服务和 CLI 中调用 GB/Z 185 operation。所有方法都接收 context，并把结果解码到调用方提供的 out 参数。</p>
+          <h3>安装</h3>
+          <pre><code data-lang="shell">go get github.com/IchenDEV/gbz185-sdk/sdks/go/gbz185@main</code></pre>
+          <pre><code data-lang="go">import "github.com/IchenDEV/gbz185-sdk/sdks/go/gbz185"</code></pre>
+          <h3>身份码</h3>
+          <pre><code data-lang="go">parts := gbz185.AgentIdentityCodeParts{
+    RegistrationServiceProvider: "A1",
+    RegistrationRequester:       "REQ001",
+    OntologySerial:              "CALENDAR",
+    InstanceSerial:              "1",
+}
+
+agentID, err := gbz185.FormatIdentityCode(parts)
+if err != nil {
+    panic(err)
+}
+
+fmt.Println(agentID)
+fmt.Println(gbz185.ValidateIdentityCode(agentID))</code></pre>
+          <h3>进程内 transport</h3>
+          <pre><code data-lang="go">transport := gbz185.NewInProcessJsonTransport()
+transport.Register("discovery.discover", func(ctx context.Context, payload any) (any, error) {
+    return []gbz185.JSONObject{
+        {
+            "description": gbz185.JSONObject{"agentId": "agent-1", "name": "Calendar Agent"},
+            "score":       1,
+            "matchedBy":   []string{"text"},
+        },
+    }, nil
+})
+
+client := gbz185.NewAgentInterconnectClient(transport)
+var results []gbz185.JSONObject
+err := client.Discover(context.Background(), gbz185.JSONObject{"text": "calendar"}, &results)</code></pre>
+          <h3>HTTP 网关客户端</h3>
+          <pre><code data-lang="go">transport := &gbz185.HttpJsonTransport{
+    Endpoint: "https://api.example.com/gbz185",
+    Headers:  map[string]string{"authorization": "Bearer token"},
+}
+client := gbz185.NewAgentInterconnectClient(transport)
+
+var result gbz185.JSONObject
+err := client.InvokeTools(context.Background(), gbz185.JSONObject{
+    "sessionId": "session-1",
+    "toolInvokeList": []gbz185.JSONObject{
+        {
+            "toolId":      "calendar.add",
+            "toolVersion": "1.0.0",
+            "toolInputParam": gbz185.JSONObject{
+                "date":  "2026-06-27",
+                "time":  "10:00",
+                "event": "review",
+            },
+        },
+    },
+}, &result)</code></pre>
+          <h3>验证</h3>
+          <pre><code data-lang="shell">cd sdks/go
+go test ./...</code></pre>
+        </section>
+
+        <section id="rust" class="section">
+          <h2>Rust</h2>
+          <p>Rust crate 适合在高可靠服务、代理、边缘网关或命令行工具中调用标准 GB/Z 185 JSON operation。模型载荷使用 serde_json::Value，方便和网关协议保持一致。</p>
+          <h3>安装</h3>
+          <pre><code data-lang="toml">[dependencies]
+gbz185-sdk = { path = "../gbz185-sdk/sdks/rust" }</code></pre>
+          <pre><code data-lang="toml">[dependencies]
+gbz185-sdk = "0.1.0"</code></pre>
+          <h3>身份码</h3>
+          <pre><code data-lang="rust">use gbz185_sdk::{
+    format_identity_code,
+    parse_identity_code,
+    validate_identity_code,
+    AgentIdentityCodeParts,
+};
+
+let parts = AgentIdentityCodeParts::new("A1", "REQ001", "CALENDAR", "1");
+let agent_id = format_identity_code(&parts)?;
+
+assert_eq!(agent_id, "1.2.156.3088.1.A1.REQ001.CALENDAR.1");
+assert!(validate_identity_code(&agent_id));
+assert_eq!(parse_identity_code(&agent_id)?.registration_requester, "REQ001");</code></pre>
+          <h3>进程内 transport</h3>
+          <pre><code data-lang="rust">use gbz185_sdk::{AgentInterconnectClient, InProcessJsonTransport};
+use serde_json::json;
+
+let transport = InProcessJsonTransport::new();
+transport.register("discovery.discover", |payload| {
+    Ok(json!([{
+        "description": { "agentId": "agent-1", "name": "Calendar Agent" },
+        "score": 1,
+        "matchedBy": ["text"],
+        "payload": payload
+    }]))
+});
+
+let client = AgentInterconnectClient::new(transport);
+let results = client.discover(json!({ "text": "calendar" }))?;</code></pre>
+          <h3>HTTP 网关客户端</h3>
+          <pre><code data-lang="rust">use gbz185_sdk::{AgentInterconnectClient, HttpJsonTransport};
+use serde_json::json;
+
+let transport = HttpJsonTransport::new("https://api.example.com/gbz185")
+    .with_header("authorization", "Bearer token");
+let client = AgentInterconnectClient::new(transport);
+
+let result = client.invoke_tools(json!({
+    "sessionId": "session-1",
+    "toolInvokeList": [{
+        "toolId": "calendar.add",
+        "toolVersion": "1.0.0",
+        "toolInputParam": {
+            "date": "2026-06-27",
+            "time": "10:00",
+            "event": "review"
+        }
+    }]
+}))?;</code></pre>
+          <h3>验证</h3>
+          <pre><code data-lang="shell">cd sdks/rust
+cargo fmt --check
+cargo test
+cargo package --allow-dirty</code></pre>
+        </section>
+
+        <section id="java" class="section">
+          <h2>Java</h2>
+          <p>Java SDK 适合 Spring、Quarkus、Micronaut、传统后端或 JVM 网关。客户端返回 Jackson JsonNode，输入可以是 Map、List、POJO 或 JsonNode。</p>
+          <h3>安装</h3>
+          <pre><code data-lang="shell">cd sdks/java
+mvn install</code></pre>
+          <pre><code data-lang="xml">&lt;dependency&gt;
+  &lt;groupId&gt;dev.idevlab&lt;/groupId&gt;
+  &lt;artifactId&gt;gbz185-sdk&lt;/artifactId&gt;
+  &lt;version&gt;0.1.0&lt;/version&gt;
+&lt;/dependency&gt;</code></pre>
+          <h3>身份码</h3>
+          <pre><code data-lang="java">import dev.idevlab.gbz185.AgentIdentityCodeParts;
+import dev.idevlab.gbz185.IdentityCodes;
+
+String agentId = IdentityCodes.formatIdentityCode(
+    new AgentIdentityCodeParts("A1", "REQ001", "CALENDAR", "1")
+);
+
+boolean valid = IdentityCodes.validateIdentityCode(agentId);
+String requester = IdentityCodes.parseIdentityCode(agentId).registrationRequester();</code></pre>
+          <h3>进程内 transport</h3>
+          <pre><code data-lang="java">ObjectMapper mapper = new ObjectMapper();
+InProcessJsonTransport transport = new InProcessJsonTransport();
+transport.register("discovery.discover", payload ->
+    mapper.valueToTree(List.of(Map.of(
+        "description", Map.of("agentId", "agent-1", "name", "Calendar Agent"),
+        "score", 1,
+        "matchedBy", List.of("text")
+    )))
+);
+
+AgentInterconnectClient client = new AgentInterconnectClient(transport);
+JsonNode results = client.discover(Map.of("text", "calendar"));</code></pre>
+          <h3>HTTP 网关客户端</h3>
+          <pre><code data-lang="java">AgentInterconnectClient client =
+    new AgentInterconnectClient(new HttpJsonTransport("https://api.example.com/gbz185"));
+
+JsonNode result = client.invokeTools(Map.of(
+    "sessionId", "session-1",
+    "toolInvokeList", List.of(Map.of(
+        "toolId", "calendar.add",
+        "toolVersion", "1.0.0",
+        "toolInputParam", Map.of(
+            "date", "2026-06-27",
+            "time", "10:00",
+            "event", "review"
+        )
+    ))
+));</code></pre>
+          <h3>验证</h3>
+          <pre><code data-lang="shell">cd sdks/java
+mvn test</code></pre>
+        </section>
+
+        <section id="release" class="section">
+          <h2>发布边界</h2>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>语言</th><th>当前推荐使用方式</th><th>正式仓库发布说明</th></tr></thead>
+              <tbody>
+                <tr><td>TypeScript</td><td><code>npm install gbz185-sdk</code></td><td>npm 包已经是首个公开分发入口。</td></tr>
+                <tr><td>Python</td><td>GitHub subdirectory 或本地路径安装</td><td>发布 PyPI 后使用 <code>python -m pip install gbz185-sdk</code>。</td></tr>
+                <tr><td>Go</td><td><code>go get github.com/IchenDEV/gbz185-sdk/sdks/go/gbz185@main</code></td><td>Go 子模块稳定版本应使用 <code>sdks/go/v0.1.0</code> 这类 tag。</td></tr>
+                <tr><td>Rust</td><td>本地 path dependency</td><td>发布 crates.io 后使用 <code>gbz185-sdk = "0.1.0"</code>。</td></tr>
+                <tr><td>Java</td><td><code>mvn install</code> 后依赖本地 artifact</td><td>发布 Maven Central 前可接企业私有 Maven 仓库。</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="callout warning">
+            <p>非 TypeScript SDK 当前是客户端和适配层，不内置完整内存运行时。生产环境的身份治理、证书策略、数据库、审计、HTTP 路由和权限控制仍应由你的服务端实现。</p>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <footer>
+      <span>多语言 SDK</span>
+      <span><a href="conformance.html">Next: 国标对照</a></span>
+    </footer>
+  </body>
+</html>
