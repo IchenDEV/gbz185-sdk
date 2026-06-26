@@ -14,11 +14,13 @@ This repository is configured to publish the static documentation site from the 
 
 On every push to `main`, GitHub Actions uploads the `site/` directory and deploys it to GitHub Pages.
 
-Expected URL:
+Expected URL on the default GitHub Pages domain:
 
 ```text
 https://ichendev.github.io/gbz185-sdk/
 ```
+
+If the GitHub account has a Pages custom domain configured, GitHub may report the canonical deployment URL under that domain instead.
 
 Manual redeploy:
 
