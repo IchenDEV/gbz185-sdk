@@ -5,22 +5,36 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Setup | gbz185-sdk</title>
     <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
-    <link rel="stylesheet" href="assets/styles.css?v=20260626-docs" />
+    <link rel="stylesheet" href="assets/styles.css?v=20260626-i18n" />
+    <script src="assets/docs.js?v=20260626-i18n" defer></script>
   </head>
   <body>
+    <a class="skip-link" href="#main-content">跳到主要内容</a>
     <header class="site-header">
       <a class="brand" href="index.html">gbz185-sdk</a>
-      <nav>
-        <a href="setup.html">Setup</a>
-        <a href="getting-started.html">Get Started</a>
-        <a href="api.html">API Reference</a>
-        <a href="examples.html">Examples</a>
-        <a href="conformance.html">国标对照</a>
-        <a href="https://github.com/IchenDEV/gbz185-sdk">GitHub</a>
-      </nav>
+      <div class="site-header-right">
+        <nav aria-label="主导航">
+          <a href="setup.html">Setup</a>
+          <a href="getting-started.html">Get Started</a>
+          <a href="api.html">API Reference</a>
+          <a href="examples.html">Examples</a>
+          <a href="conformance.html">国标对照</a>
+          <a href="https://github.com/IchenDEV/gbz185-sdk">GitHub</a>
+        </nav>
+        <div class="display-controls" aria-label="显示偏好">
+          <div class="segmented-control" data-control-group="language" role="group" aria-label="语言">
+            <button type="button" data-lang-toggle="zh" aria-pressed="true">中文</button>
+            <button type="button" data-lang-toggle="en" aria-pressed="false">EN</button>
+          </div>
+          <div class="segmented-control" data-control-group="theme" role="group" aria-label="主题">
+            <button type="button" data-theme-toggle="light" aria-pressed="true">浅色</button>
+            <button type="button" data-theme-toggle="dark" aria-pressed="false">深色</button>
+          </div>
+        </div>
+      </div>
     </header>
 
-    <main class="docs-layout">
+    <main id="main-content" class="docs-layout">
       <aside class="docs-sidebar">
         <strong>Setup</strong>
         <a href="#requirements">运行环境</a>
