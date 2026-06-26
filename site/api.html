@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>API Reference | gbz185-sdk</title>
     <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
-    <link rel="stylesheet" href="assets/styles.css?v=20260626-i18n" />
-    <script src="assets/docs.js?v=20260627-multilang" defer></script>
+    <link rel="stylesheet" href="assets/styles.css?v=20260627-integrated-lang" />
+    <script src="assets/docs.js?v=20260627-integrated-lang" defer></script>
   </head>
   <body>
     <a class="skip-link" href="#main-content">跳到主要内容</a>
@@ -18,7 +18,6 @@
           <a href="getting-started.html">Get Started</a>
           <a href="api.html">API Reference</a>
           <a href="examples.html">Examples</a>
-          <a href="multi-language.html">多语言 SDK</a>
           <a href="conformance.html">国标对照</a>
           <a href="https://github.com/IchenDEV/gbz185-sdk">GitHub</a>
         </nav>
@@ -40,6 +39,7 @@
         <strong>API Reference</strong>
         <a href="#runtime">运行时工厂</a>
         <a href="#client">Client</a>
+        <a href="#client-language">客户端语言版本</a>
         <a href="#identity-code">身份码</a>
         <a href="#identity">身份账户</a>
         <a href="#credentials">凭证与鉴别</a>
@@ -57,6 +57,17 @@
         <section class="page-title">
           <h1>API Reference</h1>
           <p>这页是开发者的完整 API 参考。所有公开函数、类、接口和核心数据模型都按模块说明：签名、用途、输入、输出和常见注意事项。</p>
+          <div class="sdk-language-switcher" aria-label="示例语言">
+            <strong>示例语言</strong>
+            <div class="segmented-control" role="group" aria-label="SDK 示例语言">
+              <button type="button" data-sdk-lang-toggle="ts" aria-pressed="true">TypeScript</button>
+              <button type="button" data-sdk-lang-toggle="python" aria-pressed="false">Python</button>
+              <button type="button" data-sdk-lang-toggle="go" aria-pressed="false">Go</button>
+              <button type="button" data-sdk-lang-toggle="rust" aria-pressed="false">Rust</button>
+              <button type="button" data-sdk-lang-toggle="java" aria-pressed="false">Java</button>
+            </div>
+            <span class="sdk-language-status">TypeScript Beta；Python / Go / Rust / Java Alpha 实验中</span>
+          </div>
         </section>
 
         <section id="runtime" class="section">
@@ -129,6 +140,80 @@
                 <tr><td><code>invokeTools(request)</code></td><td><code>ToolInvokeRequest</code></td><td><code>ToolInvokeResult</code></td><td>批量调用工具，逐项返回成功或失败。</td></tr>
               </tbody>
             </table>
+          </div>
+        </section>
+
+        <section id="client-language" class="section">
+          <h2>客户端语言版本</h2>
+          <p>同一组标准 operation 在不同 SDK 里使用各自语言习惯的方法名。切换示例语言可以直接看调用形态。</p>
+          <div class="sdk-language-panels">
+            <div class="sdk-language-panel" data-sdk-lang="ts">
+              <h3>TypeScript Beta</h3>
+              <pre><code data-lang="ts">import { AgentInterconnectClient, HttpJsonTransport } from "gbz185-sdk";
+
+const client = new AgentInterconnectClient(
+  new HttpJsonTransport({ endpoint: "https://api.example.com/gbz185" })
+);
+
+const matches = await client.discover({ text: "calendar schedule" });
+const result = await client.invokeTools({
+  sessionId: "session-1",
+  toolInvokeList: [{ toolId: "calendar.add", toolVersion: "1.0.0", toolInputParam: {} }]
+});</code></pre>
+            </div>
+            <div class="sdk-language-panel" data-sdk-lang="python" hidden>
+              <h3>Python Alpha 实验中</h3>
+              <pre><code data-lang="python">from gbz185_sdk import AgentInterconnectClient, HttpJsonTransport
+
+client = AgentInterconnectClient(HttpJsonTransport("https://api.example.com/gbz185"))
+
+matches = client.discover({"text": "calendar schedule"})
+result = client.invoke_tools({
+    "sessionId": "session-1",
+    "toolInvokeList": [{"toolId": "calendar.add", "toolVersion": "1.0.0", "toolInputParam": {}}],
+})</code></pre>
+            </div>
+            <div class="sdk-language-panel" data-sdk-lang="go" hidden>
+              <h3>Go Alpha 实验中</h3>
+              <pre><code data-lang="go">client := gbz185.NewAgentInterconnectClient(&gbz185.HttpJsonTransport{
+    Endpoint: "https://api.example.com/gbz185",
+})
+
+var matches []gbz185.JSONObject
+err := client.Discover(context.Background(), gbz185.JSONObject{"text": "calendar schedule"}, &matches)
+
+var result gbz185.JSONObject
+err = client.InvokeTools(context.Background(), gbz185.JSONObject{
+    "sessionId": "session-1",
+    "toolInvokeList": []gbz185.JSONObject{{"toolId": "calendar.add", "toolVersion": "1.0.0", "toolInputParam": gbz185.JSONObject{}}},
+}, &result)</code></pre>
+            </div>
+            <div class="sdk-language-panel" data-sdk-lang="rust" hidden>
+              <h3>Rust Alpha 实验中</h3>
+              <pre><code data-lang="rust">use gbz185_sdk::{AgentInterconnectClient, HttpJsonTransport};
+use serde_json::json;
+
+let client = AgentInterconnectClient::new(
+    HttpJsonTransport::new("https://api.example.com/gbz185")
+);
+
+let matches = client.discover(json!({ "text": "calendar schedule" }))?;
+let result = client.invoke_tools(json!({
+    "sessionId": "session-1",
+    "toolInvokeList": [{ "toolId": "calendar.add", "toolVersion": "1.0.0", "toolInputParam": {} }]
+}))?;</code></pre>
+            </div>
+            <div class="sdk-language-panel" data-sdk-lang="java" hidden>
+              <h3>Java Alpha 实验中</h3>
+              <pre><code data-lang="java">AgentInterconnectClient client =
+    new AgentInterconnectClient(new HttpJsonTransport("https://api.example.com/gbz185"));
+
+JsonNode matches = client.discover(Map.of("text", "calendar schedule"));
+JsonNode result = client.invokeTools(Map.of(
+    "sessionId", "session-1",
+    "toolInvokeList", List.of(Map.of("toolId", "calendar.add", "toolVersion", "1.0.0", "toolInputParam", Map.of()))
+));</code></pre>
+            </div>
           </div>
         </section>
 

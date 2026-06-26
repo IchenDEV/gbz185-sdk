@@ -71,11 +71,9 @@ pnpm pack:check
 ## Documentation
 
 - Canonical developer documentation: https://blogs.idevlab.dev/gbz185-sdk/
-- Multi-language website guide: https://blogs.idevlab.dev/gbz185-sdk/multi-language.html
 - SDK guide: [`docs/SDK_GUIDE.md`](docs/SDK_GUIDE.md)
 - API reference: [`docs/API_REFERENCE.md`](docs/API_REFERENCE.md)
 - GB/Z 185 conformance matrix: [`docs/CONFORMANCE.md`](docs/CONFORMANCE.md)
-- Multi-language SDKs: [`docs/MULTI_LANGUAGE_SDKS.md`](docs/MULTI_LANGUAGE_SDKS.md)
 - npm release checklist: [`docs/NPM_RELEASE.md`](docs/NPM_RELEASE.md)
 - GitHub Pages deployment notes: [`docs/GITHUB_PAGES.md`](docs/GITHUB_PAGES.md)
 

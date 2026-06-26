@@ -1,10 +1,8 @@
-# Multi-Language SDKs
+# Language Package Status
 
-This page is the main reference for using the GB/Z 185 SDK from TypeScript, Python, Go, Rust, and Java.
+This file records package status and release details for the GB/Z 185 SDK language packages. The website documentation embeds language-specific examples directly inside Setup, Get Started, API Reference, and Examples instead of sending developers to a separate multi-language page.
 
 The TypeScript package is the Beta reference implementation and includes the full in-memory runtime. The Python, Go, Rust, and Java SDKs are Alpha experimental client and adapter SDKs: they expose the same identity-code helpers, JSON transport boundary, client operation names, and conformance constants so application teams can call a GB/Z 185 JSON gateway from their language of choice while the non-TypeScript APIs continue to settle.
-
-Website version: https://blogs.idevlab.dev/gbz185-sdk/multi-language.html
 
 ## Capability Matrix
 
@@ -422,4 +420,4 @@ Java tests run in GitHub Actions with Temurin 17:
 cd sdks/java && mvn test
 ```
 
-The repository workflow `Multi-Language SDKs` verifies Python, Go, Rust, and Java on every relevant push and pull request.
+The repository language SDK CI workflow verifies Python, Go, Rust, and Java on every relevant push and pull request.

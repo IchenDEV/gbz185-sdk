@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Get Started | gbz185-sdk</title>
     <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
-    <link rel="stylesheet" href="assets/styles.css?v=20260626-i18n" />
-    <script src="assets/docs.js?v=20260627-multilang" defer></script>
+    <link rel="stylesheet" href="assets/styles.css?v=20260627-integrated-lang" />
+    <script src="assets/docs.js?v=20260627-integrated-lang" defer></script>
   </head>
   <body>
     <a class="skip-link" href="#main-content">跳到主要内容</a>
@@ -18,7 +18,6 @@
           <a href="getting-started.html">Get Started</a>
           <a href="api.html">API Reference</a>
           <a href="examples.html">Examples</a>
-          <a href="multi-language.html">多语言 SDK</a>
           <a href="conformance.html">国标对照</a>
           <a href="https://github.com/IchenDEV/gbz185-sdk">GitHub</a>
         </nav>
@@ -39,6 +38,7 @@
       <aside class="docs-sidebar">
         <strong>Get Started</strong>
         <a href="#flow">完整链路</a>
+        <a href="#language-flow">当前语言的最小链路</a>
         <a href="#identity">1. 注册身份</a>
         <a href="#description">2. 发布描述</a>
         <a href="#tool">3. 注册工具</a>
@@ -52,6 +52,17 @@
         <section class="page-title">
           <h1>Get Started</h1>
           <p>这一页用一个日历智能体示例跑通核心链路：身份注册、描述发布、发现、会话、任务、工具调用、最终结果消息。</p>
+          <div class="sdk-language-switcher" aria-label="示例语言">
+            <strong>示例语言</strong>
+            <div class="segmented-control" role="group" aria-label="SDK 示例语言">
+              <button type="button" data-sdk-lang-toggle="ts" aria-pressed="true">TypeScript</button>
+              <button type="button" data-sdk-lang-toggle="python" aria-pressed="false">Python</button>
+              <button type="button" data-sdk-lang-toggle="go" aria-pressed="false">Go</button>
+              <button type="button" data-sdk-lang-toggle="rust" aria-pressed="false">Rust</button>
+              <button type="button" data-sdk-lang-toggle="java" aria-pressed="false">Java</button>
+            </div>
+            <span class="sdk-language-status">TypeScript Beta；Python / Go / Rust / Java Alpha 实验中</span>
+          </div>
         </section>
 
         <section id="flow" class="section">
@@ -66,6 +77,109 @@
             <li>创建点对点会话和任务。</li>
             <li>调用工具并把结果作为 <code>work_result</code> 消息写回会话。</li>
           </ol>
+        </section>
+
+        <section id="language-flow" class="section">
+          <h2>当前语言的最小链路</h2>
+          <div class="sdk-language-panels">
+            <div class="sdk-language-panel" data-sdk-lang="ts">
+              <h3>TypeScript Beta：完整内存运行时</h3>
+              <p>TypeScript 可以在一个进程里直接创建身份、描述、发现、会话和工具运行时。下面各步骤展开完整流程。</p>
+              <pre><code data-lang="ts">import { createAgentInterconnectRuntime } from "gbz185-sdk";
+
+const runtime = createAgentInterconnectRuntime();
+const matches = await runtime.client.discover({
+  text: "calendar schedule",
+  requiredSkills: ["schedule.add"]
+});</code></pre>
+            </div>
+            <div class="sdk-language-panel" data-sdk-lang="python" hidden>
+              <h3>Python Alpha：调用 JSON gateway</h3>
+              <pre><code data-lang="python">from gbz185_sdk import AgentInterconnectClient, HttpJsonTransport
+
+client = AgentInterconnectClient(
+    HttpJsonTransport("https://api.example.com/gbz185")
+)
+
+matches = client.discover({
+    "text": "calendar schedule",
+    "requiredSkills": ["schedule.add"],
+})
+
+result = client.invoke_tools({
+    "sessionId": "session-1",
+    "toolInvokeList": [{
+        "toolId": "calendar.add",
+        "toolVersion": "1.0.0",
+        "toolInputParam": {"date": "2026-06-27", "time": "10:00", "event": "review"},
+    }],
+})</code></pre>
+            </div>
+            <div class="sdk-language-panel" data-sdk-lang="go" hidden>
+              <h3>Go Alpha：调用 JSON gateway</h3>
+              <pre><code data-lang="go">transport := &gbz185.HttpJsonTransport{
+    Endpoint: "https://api.example.com/gbz185",
+}
+client := gbz185.NewAgentInterconnectClient(transport)
+
+var matches []gbz185.JSONObject
+err := client.Discover(context.Background(), gbz185.JSONObject{
+    "text":           "calendar schedule",
+    "requiredSkills": []string{"schedule.add"},
+}, &matches)
+
+var result gbz185.JSONObject
+err = client.InvokeTools(context.Background(), gbz185.JSONObject{
+    "sessionId": "session-1",
+    "toolInvokeList": []gbz185.JSONObject{{
+        "toolId": "calendar.add",
+        "toolVersion": "1.0.0",
+        "toolInputParam": gbz185.JSONObject{"date": "2026-06-27", "time": "10:00", "event": "review"},
+    }},
+}, &result)</code></pre>
+            </div>
+            <div class="sdk-language-panel" data-sdk-lang="rust" hidden>
+              <h3>Rust Alpha：调用 JSON gateway</h3>
+              <pre><code data-lang="rust">use gbz185_sdk::{AgentInterconnectClient, HttpJsonTransport};
+use serde_json::json;
+
+let transport = HttpJsonTransport::new("https://api.example.com/gbz185");
+let client = AgentInterconnectClient::new(transport);
+
+let matches = client.discover(json!({
+    "text": "calendar schedule",
+    "requiredSkills": ["schedule.add"]
+}))?;
+
+let result = client.invoke_tools(json!({
+    "sessionId": "session-1",
+    "toolInvokeList": [{
+        "toolId": "calendar.add",
+        "toolVersion": "1.0.0",
+        "toolInputParam": { "date": "2026-06-27", "time": "10:00", "event": "review" }
+    }]
+}))?;</code></pre>
+            </div>
+            <div class="sdk-language-panel" data-sdk-lang="java" hidden>
+              <h3>Java Alpha：调用 JSON gateway</h3>
+              <pre><code data-lang="java">AgentInterconnectClient client =
+    new AgentInterconnectClient(new HttpJsonTransport("https://api.example.com/gbz185"));
+
+JsonNode matches = client.discover(Map.of(
+    "text", "calendar schedule",
+    "requiredSkills", List.of("schedule.add")
+));
+
+JsonNode result = client.invokeTools(Map.of(
+    "sessionId", "session-1",
+    "toolInvokeList", List.of(Map.of(
+        "toolId", "calendar.add",
+        "toolVersion", "1.0.0",
+        "toolInputParam", Map.of("date", "2026-06-27", "time", "10:00", "event", "review")
+    ))
+));</code></pre>
+            </div>
+          </div>
         </section>
 
         <section id="identity" class="section">

@@ -1,5 +1,6 @@
 const STORAGE_KEYS = {
   language: "gbz185-sdk:language",
+  sdkLanguage: "gbz185-sdk:sdk-language",
   theme: "gbz185-sdk:theme"
 };
 
@@ -30,10 +31,6 @@ const PAGE_META = {
     zh: { title: "Examples | gbz185-sdk", description: "gbz185-sdk 端到端、身份、鉴别、HTTP、群组和工具调用示例。" },
     en: { title: "Examples | gbz185-sdk", description: "End-to-end, identity, authentication, HTTP, group messaging, and tool invocation examples for gbz185-sdk." }
   },
-  "multi-language.html": {
-    zh: { title: "多语言 SDK | gbz185-sdk", description: "gbz185-sdk TypeScript、Python、Go、Rust、Java 多语言使用指南。" },
-    en: { title: "Multi-Language SDKs | gbz185-sdk", description: "Usage guide for the TypeScript, Python, Go, Rust, and Java gbz185-sdk packages." }
-  },
   "conformance.html": {
     zh: { title: "国标对照 | gbz185-sdk", description: "GB/Z 185.1-185.7 标准功能与 gbz185-sdk API 对照矩阵。" },
     en: { title: "Conformance | gbz185-sdk", description: "GB/Z 185.1-185.7 function and API conformance matrix for gbz185-sdk." }
@@ -47,7 +44,6 @@ const ZH_TO_EN = {
   "；": "; ",
   "：": ":",
   "国标对照": "Conformance",
-  "多语言 SDK": "Multi-Language SDKs",
   "GB/Z 185 智能体互联 SDK 开发者文档": "GB/Z 185 Agent Interconnection SDK Developer Docs",
   "这里就是开发者使用": "This is the main documentation entry for developers using",
   "的主文档入口：从安装、初始化、端到端运行，到每个公开 API、接口、类型和示例，全部可以在网页内直接查到。": " for installation, initialization, end-to-end runs, and every public API, interface, type, and example directly on this site.",
@@ -59,10 +55,11 @@ const ZH_TO_EN = {
   "进入快速开始": "Open Get Started",
   "每个函数、类、接口、输入输出模型都有签名、用途、入参、返回值和注意事项。": "Every function, class, interface, and input/output model includes its signature, purpose, parameters, return value, and notes.",
   "进入 API Reference": "Open API Reference",
-  "4. 多语言 SDK": "4. Multi-Language SDKs",
+  "4. 语言示例切换": "4. Language Example Switcher",
   "Python、Go、Rust、Java 和 TypeScript 的安装、客户端、传输、工具调用和发布边界统一放在这里。": "Installation, clients, transports, tool invocation, and release boundaries for Python, Go, Rust, Java, and TypeScript are collected here.",
   "TypeScript SDK 当前为 Beta；Python、Go、Rust、Java SDK 当前为 Alpha 实验中。安装、客户端、传输和工具调用统一放在这里。": "The TypeScript SDK is currently Beta; the Python, Go, Rust, and Java SDKs are currently Alpha experimental. Installation, clients, transport, and tool invocation are collected here.",
-  "进入多语言 SDK": "Open Multi-Language SDKs",
+  "Setup、Get Started、API Reference 和 Examples 都内置 TypeScript、Python、Go、Rust、Java 的示例版本，不需要跳到单独页面。": "Setup, Get Started, API Reference, and Examples all include TypeScript, Python, Go, Rust, and Java example variants, so developers do not need a separate page.",
+  "查看语言示例": "View Language Examples",
   "SDK 覆盖哪些运行链路": "Runtime Flows Covered by the SDK",
   "链路": "Flow",
   "关键 API": "Key APIs",
@@ -101,6 +98,16 @@ const ZH_TO_EN = {
   "依赖": "Dependency",
   "要求": "Requirement",
   "说明": "Description",
+  "npm 包使用 ESM，并在开发凭证实现里使用 Node.js": "The npm package uses ESM, and the development credential implementation uses Node.js",
+  "客户端 SDK 以": "The client SDK is imported as",
+  "包导入，当前推荐 GitHub subdirectory 或本地路径安装。": "and currently recommends GitHub subdirectory or local path installation.",
+  "模块路径是": "The module path is",
+  "，业务包导入": ", and application code imports",
+  "当前 crate 适合本地 path dependency 或企业私有 registry 试用。": "The current crate is suitable for local path dependencies or trials through a private enterprise registry.",
+  "artifact 为": "The artifact is",
+  "，客户端返回 Jackson": ", and the client returns Jackson",
+  "仓库开发脚本以": "Repository development scripts use",
+  "驱动主包；各语言 SDK 使用自己的生态工具验证。": "to drive the main package; each language SDK is verified with its own ecosystem tools.",
   "SDK 使用 ESM，并在开发凭证实现里使用 Node.js": "The SDK uses ESM and the development credential implementation uses Node.js",
   "包内类型随": "Package types ship with",
   "发布。": ".",
@@ -381,13 +388,28 @@ const ZH_TO_EN = {
   "这个模式适合工具返回“还没完成，需要下一轮输入”的场景。SDK 不规定完成判断，你用": "This pattern fits tools that return not-complete-yet states and need another input round. The SDK does not define completion; use",
   "写业务条件。": "to express your business condition.",
   "Next: 国标对照": "Next: Conformance",
-  "Next: 多语言 SDK": "Next: Multi-Language SDKs",
-
-  "定位": "Positioning",
-  "共享协议": "Shared Contract",
-  "Operation 列表": "Operation List",
-  "发布边界": "Release Boundaries",
-  "多语言 SDK 使用指南": "Multi-Language SDK Usage Guide",
+  "当前语言的最小链路": "Minimal Flow in the Selected Language",
+  "示例语言": "Example Language",
+  "SDK 示例语言": "SDK Example Language",
+  "TypeScript Beta；Python / Go / Rust / Java Alpha 实验中": "TypeScript Beta; Python / Go / Rust / Java Alpha experimental",
+  "TypeScript Beta": "TypeScript Beta",
+  "Python Alpha 实验中": "Python Alpha Experimental",
+  "Go Alpha 实验中": "Go Alpha Experimental",
+  "Rust Alpha 实验中": "Rust Alpha Experimental",
+  "Java Alpha 实验中": "Java Alpha Experimental",
+  "TypeScript Beta：完整内存运行时": "TypeScript Beta: Full In-Memory Runtime",
+  "Python Alpha：调用 JSON gateway": "Python Alpha: Call a JSON Gateway",
+  "Go Alpha：调用 JSON gateway": "Go Alpha: Call a JSON Gateway",
+  "Rust Alpha：调用 JSON gateway": "Rust Alpha: Call a JSON Gateway",
+  "Java Alpha：调用 JSON gateway": "Java Alpha: Call a JSON Gateway",
+  "TypeScript 可以在一个进程里直接创建身份、描述、发现、会话和工具运行时。下面各步骤展开完整流程。": "TypeScript can create the identity, description, discovery, session, and tool runtimes in one process. The steps below expand that full flow.",
+  "客户端语言版本": "Client Language Variants",
+  "同一组标准 operation 在不同 SDK 里使用各自语言习惯的方法名。切换示例语言可以直接看调用形态。": "The same standard operations use idiomatic method names in each SDK. Switch the example language to see the call shape directly.",
+  "本地源码开发：": "Local source development:",
+  "本地源码验证：": "Local source verification:",
+  "业务代码导入：": "Application import:",
+  "用当前示例语言跑一个最小 smoke test，确认 SDK 可以被导入、身份码可以生成。": "Run a minimal smoke test in the selected example language to confirm the SDK imports and identity codes can be generated.",
+  "npm 包是当前主分发入口，包含完整参考运行时。": "The npm package is the current primary distribution entry and includes the full reference runtime.",
   "这页是 TypeScript、Python、Go、Rust、Java 开发者的统一入口。每种语言都按安装、身份码、传输、客户端调用、工具调用、测试验证的顺序说明。": "This is the unified entry point for TypeScript, Python, Go, Rust, and Java developers. Each language is documented in the order of install, identity code, transport, client call, tool invocation, and verification.",
   "当前成熟度：": "Current maturity:",
   "TypeScript SDK 为": "TypeScript SDK is",
@@ -586,6 +608,14 @@ function preferredTheme() {
   return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
 }
 
+function preferredSdkLanguage() {
+  const stored = getStoredValue(STORAGE_KEYS.sdkLanguage);
+  if (["ts", "python", "go", "rust", "java"].includes(stored ?? "")) {
+    return stored;
+  }
+  return "ts";
+}
+
 function updateTextNodes(language) {
   const nodes = [];
   const ignoredTags = new Set(["SCRIPT", "STYLE", "PRE", "CODE", "SVG"]);
@@ -681,6 +711,27 @@ function applyTheme(theme) {
   for (const button of document.querySelectorAll("[data-theme-toggle]")) {
     button.setAttribute("aria-pressed", button.getAttribute("data-theme-toggle") === theme ? "true" : "false");
   }
+}
+
+function applySdkLanguage(sdkLanguage) {
+  const panels = Array.from(document.querySelectorAll("[data-sdk-lang]"));
+  if (panels.length === 0) {
+    return;
+  }
+
+  const available = new Set(panels.map((panel) => panel.getAttribute("data-sdk-lang")));
+  const activeLanguage = available.has(sdkLanguage) ? sdkLanguage : "ts";
+
+  for (const panel of panels) {
+    panel.hidden = panel.getAttribute("data-sdk-lang") !== activeLanguage;
+  }
+
+  for (const button of document.querySelectorAll("[data-sdk-lang-toggle]")) {
+    const pressed = button.getAttribute("data-sdk-lang-toggle") === activeLanguage;
+    button.setAttribute("aria-pressed", pressed ? "true" : "false");
+  }
+
+  setStoredValue(STORAGE_KEYS.sdkLanguage, activeLanguage);
 }
 
 function letterIndex(index) {
@@ -804,11 +855,21 @@ function bindControls() {
       }
     });
   }
+
+  for (const button of document.querySelectorAll("[data-sdk-lang-toggle]")) {
+    button.addEventListener("click", () => {
+      const sdkLanguage = button.getAttribute("data-sdk-lang-toggle");
+      if (["ts", "python", "go", "rust", "java"].includes(sdkLanguage ?? "")) {
+        applySdkLanguage(sdkLanguage);
+      }
+    });
+  }
 }
 
 document.addEventListener("DOMContentLoaded", () => {
   bindControls();
   applyTheme(preferredTheme());
   applyLanguage(preferredLanguage());
+  applySdkLanguage(preferredSdkLanguage());
   highlightCodeBlocks();
 });

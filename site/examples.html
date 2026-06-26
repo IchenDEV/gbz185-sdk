@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Examples | gbz185-sdk</title>
     <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
-    <link rel="stylesheet" href="assets/styles.css?v=20260626-i18n" />
-    <script src="assets/docs.js?v=20260627-multilang" defer></script>
+    <link rel="stylesheet" href="assets/styles.css?v=20260627-integrated-lang" />
+    <script src="assets/docs.js?v=20260627-integrated-lang" defer></script>
   </head>
   <body>
     <a class="skip-link" href="#main-content">跳到主要内容</a>
@@ -18,7 +18,6 @@
           <a href="getting-started.html">Get Started</a>
           <a href="api.html">API Reference</a>
           <a href="examples.html">Examples</a>
-          <a href="multi-language.html">多语言 SDK</a>
           <a href="conformance.html">国标对照</a>
           <a href="https://github.com/IchenDEV/gbz185-sdk">GitHub</a>
         </nav>
@@ -50,6 +49,17 @@
         <section class="page-title">
           <h1>Examples</h1>
           <p>这些示例覆盖开发者最常见的集成点。示例优先展示可组合的 SDK 调用，而不是隐藏在框架代码里。</p>
+          <div class="sdk-language-switcher" aria-label="示例语言">
+            <strong>示例语言</strong>
+            <div class="segmented-control" role="group" aria-label="SDK 示例语言">
+              <button type="button" data-sdk-lang-toggle="ts" aria-pressed="true">TypeScript</button>
+              <button type="button" data-sdk-lang-toggle="python" aria-pressed="false">Python</button>
+              <button type="button" data-sdk-lang-toggle="go" aria-pressed="false">Go</button>
+              <button type="button" data-sdk-lang-toggle="rust" aria-pressed="false">Rust</button>
+              <button type="button" data-sdk-lang-toggle="java" aria-pressed="false">Java</button>
+            </div>
+            <span class="sdk-language-status">TypeScript Beta；Python / Go / Rust / Java Alpha 实验中</span>
+          </div>
         </section>
 
         <section id="calendar" class="section">
@@ -88,7 +98,9 @@ const registration = await runtime.client.registerIdentity({
 
         <section id="identity-code" class="section">
           <h2>身份码工具</h2>
-          <pre><code>import {
+          <div class="sdk-language-panels">
+            <div class="sdk-language-panel" data-sdk-lang="ts">
+              <pre><code data-lang="ts">import {
   formatIdentityCode,
   parseIdentityCode,
   validateIdentityCode
@@ -109,6 +121,53 @@ console.log(validateIdentityCode(code));
 
 console.log(parseIdentityCode(code).registrationRequester);
 // REQ001</code></pre>
+            </div>
+            <div class="sdk-language-panel" data-sdk-lang="python" hidden>
+              <pre><code data-lang="python">from gbz185_sdk import AgentIdentityCodeParts, format_identity_code, parse_identity_code, validate_identity_code
+
+code = format_identity_code(AgentIdentityCodeParts(
+    registration_service_provider="abc123",
+    registration_requester="req001",
+    ontology_serial="bot000001",
+    instance_serial="0",
+))
+
+print(code)
+print(validate_identity_code(code))
+print(parse_identity_code(code).registration_requester)</code></pre>
+            </div>
+            <div class="sdk-language-panel" data-sdk-lang="go" hidden>
+              <pre><code data-lang="go">code, err := gbz185.FormatIdentityCode(gbz185.AgentIdentityCodeParts{
+    RegistrationServiceProvider: "abc123",
+    RegistrationRequester:       "req001",
+    OntologySerial:              "bot000001",
+    InstanceSerial:              "0",
+})
+if err != nil {
+    panic(err)
+}
+
+parts, err := gbz185.ParseIdentityCode(code)
+fmt.Println(code, gbz185.ValidateIdentityCode(code), parts.RegistrationRequester)</code></pre>
+            </div>
+            <div class="sdk-language-panel" data-sdk-lang="rust" hidden>
+              <pre><code data-lang="rust">use gbz185_sdk::{format_identity_code, parse_identity_code, validate_identity_code, AgentIdentityCodeParts};
+
+let parts = AgentIdentityCodeParts::new("abc123", "req001", "bot000001", "0");
+let code = format_identity_code(&parts)?;
+
+assert!(validate_identity_code(&code));
+assert_eq!(parse_identity_code(&code)?.registration_requester, "REQ001");</code></pre>
+            </div>
+            <div class="sdk-language-panel" data-sdk-lang="java" hidden>
+              <pre><code data-lang="java">String code = IdentityCodes.formatIdentityCode(
+    new AgentIdentityCodeParts("abc123", "req001", "bot000001", "0")
+);
+
+boolean valid = IdentityCodes.validateIdentityCode(code);
+String requester = IdentityCodes.parseIdentityCode(code).registrationRequester();</code></pre>
+            </div>
+          </div>
         </section>
 
         <section id="auth" class="section">
@@ -156,7 +215,9 @@ console.log(decision.allowed);</code></pre>
         <section id="http" class="section">
           <h2>HTTP Transport</h2>
           <p><code>HttpJsonTransport</code> 不规定 REST 路径。它只向一个 endpoint POST <code>{ operation, payload }</code>，服务端自行路由。</p>
-          <pre><code>import {
+          <div class="sdk-language-panels">
+            <div class="sdk-language-panel" data-sdk-lang="ts">
+              <pre><code data-lang="ts">import {
   AgentInterconnectClient,
   HttpJsonTransport
 } from "gbz185-sdk";
@@ -172,6 +233,52 @@ const results = await client.discover({
   text: "calendar schedule",
   requiredSkills: ["schedule.add"]
 });</code></pre>
+            </div>
+            <div class="sdk-language-panel" data-sdk-lang="python" hidden>
+              <pre><code data-lang="python">from gbz185_sdk import AgentInterconnectClient, HttpJsonTransport
+
+client = AgentInterconnectClient(
+    HttpJsonTransport("https://api.example.com/gbz185", headers={"authorization": "Bearer token"})
+)
+
+results = client.discover({
+    "text": "calendar schedule",
+    "requiredSkills": ["schedule.add"],
+})</code></pre>
+            </div>
+            <div class="sdk-language-panel" data-sdk-lang="go" hidden>
+              <pre><code data-lang="go">transport := &gbz185.HttpJsonTransport{
+    Endpoint: "https://api.example.com/gbz185",
+    Headers:  map[string]string{"authorization": "Bearer token"},
+}
+client := gbz185.NewAgentInterconnectClient(transport)
+
+var results []gbz185.JSONObject
+err := client.Discover(context.Background(), gbz185.JSONObject{
+    "text":           "calendar schedule",
+    "requiredSkills": []string{"schedule.add"},
+}, &results)</code></pre>
+            </div>
+            <div class="sdk-language-panel" data-sdk-lang="rust" hidden>
+              <pre><code data-lang="rust">let transport = HttpJsonTransport::new("https://api.example.com/gbz185")
+    .with_header("authorization", "Bearer token");
+let client = AgentInterconnectClient::new(transport);
+
+let results = client.discover(json!({
+    "text": "calendar schedule",
+    "requiredSkills": ["schedule.add"]
+}))?;</code></pre>
+            </div>
+            <div class="sdk-language-panel" data-sdk-lang="java" hidden>
+              <pre><code data-lang="java">AgentInterconnectClient client =
+    new AgentInterconnectClient(new HttpJsonTransport("https://api.example.com/gbz185"));
+
+JsonNode results = client.discover(Map.of(
+    "text", "calendar schedule",
+    "requiredSkills", List.of("schedule.add")
+));</code></pre>
+            </div>
+          </div>
           <p>服务端收到的 body 形态如下。</p>
           <pre><code>{
   "operation": "discovery.discover",
@@ -210,7 +317,9 @@ console.log(receipts.map((receipt) => receipt.recipientId));</code></pre>
 
         <section id="tool-loop" class="section">
           <h2>多轮工具调用</h2>
-          <pre><code>const rounds = await runtime.toolAccess.invokeUntilComplete({
+          <div class="sdk-language-panels">
+            <div class="sdk-language-panel" data-sdk-lang="ts">
+              <pre><code data-lang="ts">const rounds = await runtime.toolAccess.invokeUntilComplete({
   initialRequest: {
     sessionId: "session-counter",
     toolInvokeList: [
@@ -239,14 +348,61 @@ console.log(receipts.map((receipt) => receipt.recipientId));</code></pre>
 });
 
 console.log(rounds.length);</code></pre>
-          <p>这个模式适合工具返回“还没完成，需要下一轮输入”的场景。SDK 不规定完成判断，你用 <code>isComplete</code> 写业务条件。</p>
+              <p>这个模式适合工具返回“还没完成，需要下一轮输入”的场景。SDK 不规定完成判断，你用 <code>isComplete</code> 写业务条件。</p>
+            </div>
+            <div class="sdk-language-panel" data-sdk-lang="python" hidden>
+              <pre><code data-lang="python">result = client.invoke_tools({
+    "sessionId": "session-counter",
+    "toolInvokeList": [{
+        "toolId": "counter",
+        "toolVersion": "1.0.0",
+        "toolInputParam": {"count": 0},
+    }],
+})</code></pre>
+              <p>Alpha 客户端只封装标准 <code>tool.invoke</code> operation；多轮完成判断由应用层循环控制。</p>
+            </div>
+            <div class="sdk-language-panel" data-sdk-lang="go" hidden>
+              <pre><code data-lang="go">var result gbz185.JSONObject
+err := client.InvokeTools(context.Background(), gbz185.JSONObject{
+    "sessionId": "session-counter",
+    "toolInvokeList": []gbz185.JSONObject{{
+        "toolId": "counter",
+        "toolVersion": "1.0.0",
+        "toolInputParam": gbz185.JSONObject{"count": 0},
+    }},
+}, &result)</code></pre>
+              <p>Alpha 客户端返回单轮结果；是否继续下一轮由业务代码判断。</p>
+            </div>
+            <div class="sdk-language-panel" data-sdk-lang="rust" hidden>
+              <pre><code data-lang="rust">let result = client.invoke_tools(json!({
+    "sessionId": "session-counter",
+    "toolInvokeList": [{
+        "toolId": "counter",
+        "toolVersion": "1.0.0",
+        "toolInputParam": { "count": 0 }
+    }]
+}))?;</code></pre>
+              <p>Alpha 客户端返回单轮结果；是否继续下一轮由业务代码判断。</p>
+            </div>
+            <div class="sdk-language-panel" data-sdk-lang="java" hidden>
+              <pre><code data-lang="java">JsonNode result = client.invokeTools(Map.of(
+    "sessionId", "session-counter",
+    "toolInvokeList", List.of(Map.of(
+        "toolId", "counter",
+        "toolVersion", "1.0.0",
+        "toolInputParam", Map.of("count", 0)
+    ))
+));</code></pre>
+              <p>Alpha 客户端返回单轮结果；是否继续下一轮由业务代码判断。</p>
+            </div>
+          </div>
         </section>
       </div>
     </main>
 
     <footer>
       <span>Examples</span>
-      <span><a href="multi-language.html">Next: 多语言 SDK</a></span>
+      <span><a href="conformance.html">Next: 国标对照</a></span>
     </footer>
   </body>
 </html>

@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Setup | gbz185-sdk</title>
     <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
-    <link rel="stylesheet" href="assets/styles.css?v=20260626-i18n" />
-    <script src="assets/docs.js?v=20260627-multilang" defer></script>
+    <link rel="stylesheet" href="assets/styles.css?v=20260627-integrated-lang" />
+    <script src="assets/docs.js?v=20260627-integrated-lang" defer></script>
   </head>
   <body>
     <a class="skip-link" href="#main-content">跳到主要内容</a>
@@ -18,7 +18,6 @@
           <a href="getting-started.html">Get Started</a>
           <a href="api.html">API Reference</a>
           <a href="examples.html">Examples</a>
-          <a href="multi-language.html">多语言 SDK</a>
           <a href="conformance.html">国标对照</a>
           <a href="https://github.com/IchenDEV/gbz185-sdk">GitHub</a>
         </nav>
@@ -50,6 +49,17 @@
         <section class="page-title">
           <h1>Setup</h1>
           <p>这页解决“怎么把 SDK 放进项目、怎么配置、怎么确认它能跑”的问题。后面的 Get Started 和 Examples 都假设这里已经完成。</p>
+          <div class="sdk-language-switcher" aria-label="示例语言">
+            <strong>示例语言</strong>
+            <div class="segmented-control" role="group" aria-label="SDK 示例语言">
+              <button type="button" data-sdk-lang-toggle="ts" aria-pressed="true">TypeScript</button>
+              <button type="button" data-sdk-lang-toggle="python" aria-pressed="false">Python</button>
+              <button type="button" data-sdk-lang-toggle="go" aria-pressed="false">Go</button>
+              <button type="button" data-sdk-lang-toggle="rust" aria-pressed="false">Rust</button>
+              <button type="button" data-sdk-lang-toggle="java" aria-pressed="false">Java</button>
+            </div>
+            <span class="sdk-language-status">TypeScript Beta；Python / Go / Rust / Java Alpha 实验中</span>
+          </div>
         </section>
 
         <section id="requirements" class="section">
@@ -60,10 +70,12 @@
                 <tr><th>依赖</th><th>要求</th><th>说明</th></tr>
               </thead>
               <tbody>
-                <tr><td>Node.js</td><td><code>&gt;=20</code></td><td>SDK 使用 ESM，并在开发凭证实现里使用 Node.js <code>crypto</code>。</td></tr>
-                <tr><td>TypeScript</td><td><code>&gt;=5.8</code></td><td>包内类型随 <code>dist/*.d.ts</code> 发布。</td></tr>
-                <tr><td>包管理器</td><td><code>pnpm</code>, <code>npm</code>, <code>yarn</code></td><td>仓库开发脚本用 <code>pnpm</code>；消费 SDK 不强制包管理器。</td></tr>
-                <tr><td>模块系统</td><td>ESM</td><td><code>package.json</code> 的 <code>type</code> 是 <code>module</code>。</td></tr>
+                <tr><td>TypeScript Beta</td><td>Node.js <code>&gt;=20</code>, TypeScript <code>&gt;=5.8</code></td><td>npm 包使用 ESM，并在开发凭证实现里使用 Node.js <code>crypto</code>。</td></tr>
+                <tr><td>Python Alpha 实验中</td><td>Python <code>&gt;=3.10</code></td><td>客户端 SDK 以 <code>gbz185_sdk</code> 包导入，当前推荐 GitHub subdirectory 或本地路径安装。</td></tr>
+                <tr><td>Go Alpha 实验中</td><td>Go <code>1.22</code></td><td>模块路径是 <code>github.com/IchenDEV/gbz185-sdk/sdks/go</code>，业务包导入 <code>/gbz185</code>。</td></tr>
+                <tr><td>Rust Alpha 实验中</td><td>Rust edition <code>2021</code></td><td>当前 crate 适合本地 path dependency 或企业私有 registry 试用。</td></tr>
+                <tr><td>Java Alpha 实验中</td><td>JDK <code>17</code>, Maven</td><td>artifact 为 <code>dev.idevlab:gbz185-sdk</code>，客户端返回 Jackson <code>JsonNode</code>。</td></tr>
+                <tr><td>包管理器</td><td><code>pnpm</code>, <code>npm</code>, <code>pip</code>, <code>go</code>, <code>cargo</code>, <code>mvn</code></td><td>仓库开发脚本以 <code>pnpm</code> 驱动主包；各语言 SDK 使用自己的生态工具验证。</td></tr>
               </tbody>
             </table>
           </div>
@@ -71,30 +83,55 @@
 
         <section id="install" class="section">
           <h2>安装方式</h2>
-          <h3>从 GitHub 安装</h3>
-          <p>当前仓库已经包含构建后的 <code>dist</code>，可以直接作为 GitHub package 依赖使用。</p>
-          <pre><code>pnpm add github:IchenDEV/gbz185-sdk
-
+          <div class="sdk-language-panels">
+            <div class="sdk-language-panel" data-sdk-lang="ts">
+              <h3>TypeScript Beta</h3>
+              <p>npm 包是当前主分发入口，包含完整参考运行时。</p>
+              <pre><code data-lang="shell">npm install gbz185-sdk
 # 或者
-npm install github:IchenDEV/gbz185-sdk</code></pre>
-
-          <h3>在本地 workspace 使用</h3>
-          <p>如果你的应用和 SDK 在同一台机器上开发，可以先构建 SDK，再从本地路径安装。</p>
-          <pre><code>git clone https://github.com/IchenDEV/gbz185-sdk.git
-cd gbz185-sdk
-pnpm install
-pnpm build
-
-cd /path/to/your-app
-pnpm add /path/to/gbz185-sdk</code></pre>
-
-          <h3>直接开发 SDK</h3>
-          <pre><code>git clone https://github.com/IchenDEV/gbz185-sdk.git
+pnpm add gbz185-sdk</code></pre>
+              <p>本地源码开发：</p>
+              <pre><code data-lang="shell">git clone https://github.com/IchenDEV/gbz185-sdk.git
 cd gbz185-sdk
 pnpm install
 pnpm typecheck
 pnpm test
 pnpm build</code></pre>
+            </div>
+            <div class="sdk-language-panel" data-sdk-lang="python" hidden>
+              <h3>Python Alpha 实验中</h3>
+              <pre><code data-lang="shell">python -m pip install "git+https://github.com/IchenDEV/gbz185-sdk.git#subdirectory=sdks/python"</code></pre>
+              <p>本地源码开发：</p>
+              <pre><code data-lang="shell">cd sdks/python
+python -m pip install .
+python -m unittest discover -s tests</code></pre>
+            </div>
+            <div class="sdk-language-panel" data-sdk-lang="go" hidden>
+              <h3>Go Alpha 实验中</h3>
+              <pre><code data-lang="shell">go get github.com/IchenDEV/gbz185-sdk/sdks/go/gbz185@main</code></pre>
+              <p>业务代码导入：</p>
+              <pre><code data-lang="go">import "github.com/IchenDEV/gbz185-sdk/sdks/go/gbz185"</code></pre>
+            </div>
+            <div class="sdk-language-panel" data-sdk-lang="rust" hidden>
+              <h3>Rust Alpha 实验中</h3>
+              <pre><code data-lang="toml">[dependencies]
+gbz185-sdk = { path = "../gbz185-sdk/sdks/rust" }</code></pre>
+              <p>本地源码验证：</p>
+              <pre><code data-lang="shell">cd sdks/rust
+cargo fmt --check
+cargo test</code></pre>
+            </div>
+            <div class="sdk-language-panel" data-sdk-lang="java" hidden>
+              <h3>Java Alpha 实验中</h3>
+              <pre><code data-lang="shell">cd sdks/java
+mvn install</code></pre>
+              <pre><code data-lang="xml">&lt;dependency&gt;
+  &lt;groupId&gt;dev.idevlab&lt;/groupId&gt;
+  &lt;artifactId&gt;gbz185-sdk&lt;/artifactId&gt;
+  &lt;version&gt;0.1.0&lt;/version&gt;
+&lt;/dependency&gt;</code></pre>
+            </div>
+          </div>
         </section>
 
         <section id="tsconfig" class="section">
@@ -114,8 +151,10 @@ pnpm build</code></pre>
 
         <section id="verify" class="section">
           <h2>验证安装</h2>
-          <p>新建一个 <code>smoke.mjs</code> 或 TypeScript 文件，确认 SDK 可以被导入、身份码可以生成、运行时可以创建。</p>
-          <pre><code>import {
+          <p>用当前示例语言跑一个最小 smoke test，确认 SDK 可以被导入、身份码可以生成。</p>
+          <div class="sdk-language-panels">
+            <div class="sdk-language-panel" data-sdk-lang="ts">
+              <pre><code data-lang="ts">import {
   createAgentInterconnectRuntime,
   formatIdentityCode,
   validateIdentityCode
@@ -131,6 +170,50 @@ const id = formatIdentityCode({
 
 console.log(validateIdentityCode(id)); // true
 console.log(Boolean(runtime.client));  // true</code></pre>
+            </div>
+            <div class="sdk-language-panel" data-sdk-lang="python" hidden>
+              <pre><code data-lang="python">from gbz185_sdk import AgentIdentityCodeParts, format_identity_code, validate_identity_code
+
+agent_id = format_identity_code(AgentIdentityCodeParts(
+    registration_service_provider="A1",
+    registration_requester="REQ001",
+    ontology_serial="CALENDAR",
+    instance_serial="1",
+))
+
+print(validate_identity_code(agent_id))</code></pre>
+            </div>
+            <div class="sdk-language-panel" data-sdk-lang="go" hidden>
+              <pre><code data-lang="go">parts := gbz185.AgentIdentityCodeParts{
+    RegistrationServiceProvider: "A1",
+    RegistrationRequester:       "REQ001",
+    OntologySerial:              "CALENDAR",
+    InstanceSerial:              "1",
+}
+
+agentID, err := gbz185.FormatIdentityCode(parts)
+if err != nil {
+    panic(err)
+}
+fmt.Println(gbz185.ValidateIdentityCode(agentID))</code></pre>
+            </div>
+            <div class="sdk-language-panel" data-sdk-lang="rust" hidden>
+              <pre><code data-lang="rust">use gbz185_sdk::{format_identity_code, validate_identity_code, AgentIdentityCodeParts};
+
+let parts = AgentIdentityCodeParts::new("A1", "REQ001", "CALENDAR", "1");
+let agent_id = format_identity_code(&parts)?;
+assert!(validate_identity_code(&agent_id));</code></pre>
+            </div>
+            <div class="sdk-language-panel" data-sdk-lang="java" hidden>
+              <pre><code data-lang="java">import dev.idevlab.gbz185.AgentIdentityCodeParts;
+import dev.idevlab.gbz185.IdentityCodes;
+
+String agentId = IdentityCodes.formatIdentityCode(
+    new AgentIdentityCodeParts("A1", "REQ001", "CALENDAR", "1")
+);
+boolean valid = IdentityCodes.validateIdentityCode(agentId);</code></pre>
+            </div>
+          </div>
         </section>
 
         <section id="runtime-choice" class="section">
