@@ -45,11 +45,12 @@ pnpm install
 pnpm typecheck
 pnpm test
 pnpm build
+pnpm example:calendar
 ```
 
 ## Documentation
 
-- Online documentation: https://blogs.idevlab.dev/gbz185-sdk/
+- Canonical developer documentation: https://blogs.idevlab.dev/gbz185-sdk/
 - SDK guide: [`docs/SDK_GUIDE.md`](docs/SDK_GUIDE.md)
 - API reference: [`docs/API_REFERENCE.md`](docs/API_REFERENCE.md)
 - GB/Z 185 conformance matrix: [`docs/CONFORMANCE.md`](docs/CONFORMANCE.md)

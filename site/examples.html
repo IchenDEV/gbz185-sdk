@@ -1,0 +1,237 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Examples | gbz185-sdk</title>
+    <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="assets/styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="index.html">gbz185-sdk</a>
+      <nav>
+        <a href="setup.html">Setup</a>
+        <a href="getting-started.html">Get Started</a>
+        <a href="api.html">API Reference</a>
+        <a href="examples.html">Examples</a>
+        <a href="conformance.html">国标对照</a>
+        <a href="https://github.com/IchenDEV/gbz185-sdk">GitHub</a>
+      </nav>
+    </header>
+
+    <main class="docs-layout">
+      <aside class="docs-sidebar">
+        <strong>Examples</strong>
+        <a href="#calendar">端到端日历智能体</a>
+        <a href="#identity-code">身份码工具</a>
+        <a href="#auth">凭证鉴别</a>
+        <a href="#http">HTTP Transport</a>
+        <a href="#group">群组消息</a>
+        <a href="#tool-loop">多轮工具调用</a>
+      </aside>
+
+      <div class="docs-content">
+        <section class="page-title">
+          <h1>Examples</h1>
+          <p>这些示例覆盖开发者最常见的集成点。示例优先展示可组合的 SDK 调用，而不是隐藏在框架代码里。</p>
+        </section>
+
+        <section id="calendar" class="section">
+          <h2>端到端日历智能体</h2>
+          <p>仓库内置 <code>examples/calendar.ts</code>，覆盖注册身份、发布描述、发现、建会话、调用工具、发送最终结果。</p>
+          <pre><code>pnpm install
+pnpm build
+pnpm example:calendar</code></pre>
+          <pre><code>import {
+  createAgentInterconnectRuntime,
+  formatIdentityCode,
+  type AgentDescription
+} from "gbz185-sdk";
+
+const runtime = createAgentInterconnectRuntime();
+const requesterId = formatIdentityCode({
+  registrationServiceProvider: "A1",
+  registrationRequester: "REQ001",
+  ontologySerial: "ASSISTANT",
+  instanceSerial: "1"
+});
+
+const registration = await runtime.client.registerIdentity({
+  delegatorId: "example-org",
+  subject: "Calendar Agent",
+  registrationServiceProvider: "A1",
+  registrationRequester: "REQ001",
+  ontologySerial: "CALENDAR",
+  instanceSerial: "1",
+  issueCredential: true,
+  credentialAudience: [requesterId],
+  credentialScope: ["agent:interact", "tool:invoke"]
+});</code></pre>
+          <p>完整代码见仓库示例文件；Get Started 页面逐段解释了每一步。</p>
+        </section>
+
+        <section id="identity-code" class="section">
+          <h2>身份码工具</h2>
+          <pre><code>import {
+  formatIdentityCode,
+  parseIdentityCode,
+  validateIdentityCode
+} from "gbz185-sdk";
+
+const code = formatIdentityCode({
+  registrationServiceProvider: "abc123",
+  registrationRequester: "req001",
+  ontologySerial: "bot000001",
+  instanceSerial: "0"
+});
+
+console.log(code);
+// 1.2.156.3088.1.ABC123.REQ001.BOT000001.0
+
+console.log(validateIdentityCode(code));
+// true
+
+console.log(parseIdentityCode(code).registrationRequester);
+// REQ001</code></pre>
+        </section>
+
+        <section id="auth" class="section">
+          <h2>凭证鉴别与授权</h2>
+          <pre><code>import {
+  DevelopmentCredentialIssuer,
+  DevelopmentCredentialVerifier,
+  InMemoryCredentialRepository,
+  InMemoryCredentialStatusStore,
+  InterconnectionAuthorizationRuntime
+} from "gbz185-sdk";
+
+const repository = new InMemoryCredentialRepository();
+const statusStore = new InMemoryCredentialStatusStore();
+const issuer = new DevelopmentCredentialIssuer(repository, statusStore);
+const verifier = new DevelopmentCredentialVerifier(statusStore);
+const auth = new InterconnectionAuthorizationRuntime(verifier);
+
+const issued = await issuer.issueCredential({
+  agentId: "1.2.156.3088.1.A1.REQ001.DEMO.1",
+  subject: "Demo Agent",
+  audience: ["service-agent"],
+  scope: ["agent:interact"]
+});
+
+const pkg = auth.createPresentation({
+  credential: issued.credential,
+  privateKeyPem: issued.privateKeyPem,
+  audience: "service-agent",
+  scope: ["agent:interact"],
+  payload: { sessionId: "session-1" }
+});
+
+const decision = await auth.authenticatePeer(pkg, {
+  expectedAudience: "service-agent",
+  requiredScope: ["agent:interact"]
+});
+
+console.log(decision.allowed);</code></pre>
+          <div class="callout warning">
+            <p><strong>生产提醒：</strong> 这个示例使用开发 issuer/verifier。生产环境应实现 <code>CredentialIssuer</code>、<code>CredentialVerifier</code>、<code>CertificateChainVerifier</code> 和 <code>CredentialStatusStore</code>。</p>
+          </div>
+        </section>
+
+        <section id="http" class="section">
+          <h2>HTTP Transport</h2>
+          <p><code>HttpJsonTransport</code> 不规定 REST 路径。它只向一个 endpoint POST <code>{ operation, payload }</code>，服务端自行路由。</p>
+          <pre><code>import {
+  AgentInterconnectClient,
+  HttpJsonTransport
+} from "gbz185-sdk";
+
+const client = new AgentInterconnectClient(
+  new HttpJsonTransport({
+    endpoint: "https://api.example.com/gbz185",
+    headers: { authorization: "Bearer token" }
+  })
+);
+
+const results = await client.discover({
+  text: "calendar schedule",
+  requiredSkills: ["schedule.add"]
+});</code></pre>
+          <p>服务端收到的 body 形态如下。</p>
+          <pre><code>{
+  "operation": "discovery.discover",
+  "payload": {
+    "text": "calendar schedule",
+    "requiredSkills": ["schedule.add"]
+  }
+}</code></pre>
+        </section>
+
+        <section id="group" class="section">
+          <h2>群组消息分发</h2>
+          <pre><code>const runtime = createAgentInterconnectRuntime();
+
+const session = await runtime.client.createSession({
+  mode: "group",
+  sender: { agentId: requesterId },
+  receivers: [
+    { agentId: serviceAId, mode: "group" },
+    { agentId: serviceBId, mode: "group" }
+  ]
+});
+
+const receipts = await runtime.client.distributeMessage({
+  senderRole: "requester",
+  senderId: requesterId,
+  sessionId: session.id,
+  dataItems: [
+    { type: "text/plain", metadata: {}, payload: "hello group" }
+  ]
+});
+
+console.log(receipts.map((receipt) => receipt.recipientId));</code></pre>
+          <p>未显式传 <code>recipients</code> 时，分发运行时会从会话中推断所有参与方，并排除发送方。</p>
+        </section>
+
+        <section id="tool-loop" class="section">
+          <h2>多轮工具调用</h2>
+          <pre><code>const rounds = await runtime.toolAccess.invokeUntilComplete({
+  initialRequest: {
+    sessionId: "session-counter",
+    toolInvokeList: [
+      {
+        toolId: "counter",
+        toolVersion: "1.0.0",
+        toolInputParam: { count: 0 }
+      }
+    ]
+  },
+  isComplete: (result) =>
+    Number(result.toolResultList[0]?.toolOutputParam?.count ?? 0) >= 2,
+  nextRequest: (result) => ({
+    sessionId: "session-counter",
+    toolInvokeList: [
+      {
+        toolId: "counter",
+        toolVersion: "1.0.0",
+        toolInputParam: {
+          count: Number(result.toolResultList[0]?.toolOutputParam?.count ?? 0)
+        }
+      }
+    ]
+  }),
+  maxRounds: 3
+});
+
+console.log(rounds.length);</code></pre>
+          <p>这个模式适合工具返回“还没完成，需要下一轮输入”的场景。SDK 不规定完成判断，你用 <code>isComplete</code> 写业务条件。</p>
+        </section>
+      </div>
+    </main>
+
+    <footer>
+      <span>Examples</span>
+      <span><a href="conformance.html">Next: 国标对照</a></span>
+    </footer>
+  </body>
+</html>

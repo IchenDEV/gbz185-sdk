@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>API | gbz185-sdk</title>
+    <title>API Reference | gbz185-sdk</title>
     <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
     <link rel="stylesheet" href="assets/styles.css" />
   </head>
@@ -11,103 +11,363 @@
     <header class="site-header">
       <a class="brand" href="index.html">gbz185-sdk</a>
       <nav>
-        <a href="api.html">API</a>
+        <a href="setup.html">Setup</a>
+        <a href="getting-started.html">Get Started</a>
+        <a href="api.html">API Reference</a>
+        <a href="examples.html">Examples</a>
         <a href="conformance.html">国标对照</a>
         <a href="https://github.com/IchenDEV/gbz185-sdk">GitHub</a>
       </nav>
     </header>
 
-    <main>
-      <section class="page-title">
-        <h1>SDK API 速查</h1>
-        <p>这里列出主要导出模块。完整 Markdown 版本见仓库中的 <code>docs/API_REFERENCE.md</code>。</p>
-      </section>
+    <main class="docs-layout">
+      <aside class="docs-sidebar">
+        <strong>API Reference</strong>
+        <a href="#runtime">运行时工厂</a>
+        <a href="#client">Client</a>
+        <a href="#identity-code">身份码</a>
+        <a href="#identity">身份账户</a>
+        <a href="#credentials">凭证与鉴别</a>
+        <a href="#description">描述管理</a>
+        <a href="#discovery">发现服务</a>
+        <a href="#interaction">交互与消息</a>
+        <a href="#tools">工具调用</a>
+        <a href="#transport">Transport</a>
+        <a href="#validation">校验</a>
+        <a href="#models">核心模型</a>
+        <a href="#constants">国标覆盖常量</a>
+      </aside>
 
-      <section class="section two-column">
-        <article>
-          <h2>身份码</h2>
-          <ul>
-            <li><code>formatIdentityCode(parts)</code></li>
-            <li><code>parseIdentityCode(code)</code></li>
-            <li><code>validateIdentityCode(code)</code></li>
-            <li><code>validateIdentityCodeParts(parts)</code></li>
-          </ul>
-        </article>
-        <article>
+      <div class="docs-content">
+        <section class="page-title">
+          <h1>API Reference</h1>
+          <p>这页是开发者的完整 API 参考。所有公开函数、类、接口和核心数据模型都按模块说明：签名、用途、输入、输出和常见注意事项。</p>
+        </section>
+
+        <section id="runtime" class="section">
           <h2>运行时工厂</h2>
-          <ul>
-            <li><code>createAgentInterconnectRuntime()</code></li>
-            <li><code>AgentInterconnectRuntime</code></li>
-            <li><code>AgentInterconnectClient</code></li>
-            <li><code>JsonTransport</code></li>
-          </ul>
-        </article>
-        <article>
-          <h2>身份与凭证</h2>
-          <ul>
-            <li><code>IdentityRegistryRuntime</code></li>
-            <li><code>AgentIdentityMaintenance</code></li>
-            <li><code>CredentialIssuer</code></li>
-            <li><code>CredentialVerifier</code></li>
-            <li><code>DevelopmentCredentialIssuer</code></li>
-            <li><code>DevelopmentCredentialVerifier</code></li>
-          </ul>
-        </article>
-        <article>
-          <h2>描述与发现</h2>
-          <ul>
-            <li><code>AgentDescriptionRegistry</code></li>
-            <li><code>AgentDescriptionMaintenance</code></li>
-            <li><code>AgentDescription</code></li>
-            <li><code>SkillDescription</code></li>
-            <li><code>DiscoveryService</code></li>
-            <li><code>PresetDiscoverySource</code></li>
-          </ul>
-        </article>
-        <article>
+          <article class="api-entry">
+            <h3><code>createAgentInterconnectRuntime()</code></h3>
+            <div class="signature">function createAgentInterconnectRuntime(): AgentInterconnectRuntime</div>
+            <p>创建一个完整的内存参考运行时，包含身份、凭证、描述、发现、交互、消息分发、工具服务、工具访问、transport 和 client。</p>
+            <dl class="meta-list">
+              <dt>输入</dt><dd>无。</dd>
+              <dt>返回</dt><dd><code>AgentInterconnectRuntime</code>，可直接用于本地开发和测试。</dd>
+              <dt>适用</dt><dd>快速原型、单进程测试、国标流程 smoke test。</dd>
+            </dl>
+          </article>
+
+          <article class="api-entry">
+            <h3><code>AgentInterconnectRuntime</code></h3>
+            <p>工厂返回的组合对象。</p>
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>属性</th><th>类型</th><th>用途</th></tr></thead>
+                <tbody>
+                  <tr><td><code>credentials</code></td><td>开发凭证仓库、状态仓库、issuer、verifier</td><td>本地凭证签发、状态更新、验签。</td></tr>
+                  <tr><td><code>agentIdentityMaintenance</code></td><td><code>AgentIdentityMaintenance</code></td><td>智能体侧身份维护门面。</td></tr>
+                  <tr><td><code>agentDescriptionMaintenance</code></td><td><code>AgentDescriptionMaintenance</code></td><td>智能体侧描述维护门面。</td></tr>
+                  <tr><td><code>interconnectionAuthorization</code></td><td><code>InterconnectionAuthorizationRuntime</code></td><td>过程凭证包、对端鉴别、互鉴权。</td></tr>
+                  <tr><td><code>identityRegistry</code></td><td><code>IdentityRegistryRuntime</code></td><td>管理服务侧身份账户运行时。</td></tr>
+                  <tr><td><code>descriptionRegistry</code></td><td><code>AgentDescriptionRegistry</code></td><td>描述注册、审核、发布和撤销。</td></tr>
+                  <tr><td><code>discoveryService</code></td><td><code>DiscoveryService</code></td><td>发现服务。</td></tr>
+                  <tr><td><code>interactionRuntime</code></td><td><code>InteractionRuntime</code></td><td>会话、任务、消息。</td></tr>
+                  <tr><td><code>messageDistribution</code></td><td><code>MessageDistributionRuntime</code></td><td>群组消息分发和收件箱。</td></tr>
+                  <tr><td><code>toolRuntime</code></td><td><code>ToolRuntime</code></td><td>资源侧工具注册和执行。</td></tr>
+                  <tr><td><code>toolAccess</code></td><td><code>ToolAccessRuntime</code></td><td>智能体侧工具访问。</td></tr>
+                  <tr><td><code>transport</code></td><td><code>InProcessJsonTransport</code></td><td>内存 operation 路由。</td></tr>
+                  <tr><td><code>client</code></td><td><code>AgentInterconnectClient</code></td><td>统一客户端。</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </article>
+        </section>
+
+        <section id="client" class="section">
+          <h2>AgentInterconnectClient</h2>
+          <div class="signature">new AgentInterconnectClient(transport: JsonTransport)</div>
+          <p>客户端只依赖 <code>JsonTransport</code>，因此同一套调用可以走内存、HTTP 或自定义协议。</p>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>方法</th><th>输入</th><th>返回</th><th>说明</th></tr></thead>
+              <tbody>
+                <tr><td><code>registerIdentity(input)</code></td><td><code>RegisterIdentityInput</code></td><td><code>RegisterIdentityResult</code></td><td>注册身份账户，可同时发行开发凭证。</td></tr>
+                <tr><td><code>getIdentity(agentId)</code></td><td><code>AgentIdentityCode</code></td><td><code>IdentityAccount | undefined</code></td><td>按身份码读取账户。</td></tr>
+                <tr><td><code>issueCredential(agentId, input)</code></td><td>subject、audience、scope、expiresAt</td><td><code>IssuedCredential</code></td><td>给已有身份账户发行凭证。</td></tr>
+                <tr><td><code>lockIdentity(agentId, reason?)</code></td><td>身份码、原因</td><td><code>IdentityAccount</code></td><td>锁定身份账户，并联动锁定已发行凭证。</td></tr>
+                <tr><td><code>unlockIdentity(agentId, reason?)</code></td><td>身份码、原因</td><td><code>IdentityAccount</code></td><td>恢复身份账户和凭证状态。</td></tr>
+                <tr><td><code>revokeIdentity(agentId, reason?)</code></td><td>身份码、原因</td><td><code>IdentityAccount</code></td><td>注销身份账户，并联动注销凭证。</td></tr>
+                <tr><td><code>registerDescription(description)</code></td><td><code>AgentDescription</code></td><td><code>DescriptionRecord</code></td><td>注册并校验智能体描述。</td></tr>
+                <tr><td><code>reviewDescription(agentId, review)</code></td><td>reviewerId、approved、reason、riskLevel</td><td><code>DescriptionRecord</code></td><td>追加描述审核记录。</td></tr>
+                <tr><td><code>issuePublicationCertificate(agentId, input)</code></td><td>issuer、publicKeyDigest、metadata</td><td><code>PublicationCertificate</code></td><td>签发描述发布证书元数据。</td></tr>
+                <tr><td><code>publishDescription(agentId)</code></td><td>身份码</td><td><code>DescriptionRecord</code></td><td>发布描述，使其默认可被发现。</td></tr>
+                <tr><td><code>publishDescriptionWithInfo(agentId, publication?)</code></td><td>身份码、发布信息</td><td><code>DescriptionRecord</code></td><td>发布并携带区域、权限、版权等发布元数据。</td></tr>
+                <tr><td><code>unpublishDescription(agentId)</code></td><td>身份码</td><td><code>DescriptionRecord</code></td><td>下架描述，并标记不可用。</td></tr>
+                <tr><td><code>revokeDescription(agentId, reason?)</code></td><td>身份码、原因</td><td><code>DescriptionRecord</code></td><td>撤销描述，并标记不可发现、不可用。</td></tr>
+                <tr><td><code>discover(query)</code></td><td><code>DiscoveryQuery</code></td><td><code>DiscoveryResult[]</code></td><td>按文本、身份码、名称、技能、标签和 IO 类型发现。</td></tr>
+                <tr><td><code>createSession(input)</code></td><td><code>CreateSessionInput</code></td><td><code>Session</code></td><td>创建点对点、群组或混合会话。</td></tr>
+                <tr><td><code>submitTask(input)</code></td><td><code>SubmitTaskInput</code></td><td><code>Task</code></td><td>在会话内创建任务，初始状态为 <code>accepted</code>。</td></tr>
+                <tr><td><code>sendMessage(input)</code></td><td><code>SendMessageInput</code></td><td><code>Message</code></td><td>发送消息，可关联任务、分块和最终结果。</td></tr>
+                <tr><td><code>distributeMessage(input, recipients?)</code></td><td>消息输入、收件人列表</td><td><code>DistributionReceipt[]</code></td><td>群组消息分发，未传收件人时从会话推断。</td></tr>
+                <tr><td><code>listTools(toolRequestList?)</code></td><td>可选工具 ID 列表</td><td><code>ToolSyncData</code></td><td>获取全部或部分工具描述。</td></tr>
+                <tr><td><code>syncToolUpdates()</code></td><td>无</td><td><code>ToolUpdateData</code></td><td>拉取工具更新摘要，读取后清空更新集合。</td></tr>
+                <tr><td><code>invokeTools(request)</code></td><td><code>ToolInvokeRequest</code></td><td><code>ToolInvokeResult</code></td><td>批量调用工具，逐项返回成功或失败。</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section id="identity-code" class="section">
+          <h2>身份码</h2>
+          <article class="api-entry">
+            <h3><code>formatIdentityCode(parts)</code></h3>
+            <div class="signature">formatIdentityCode(parts: Omit&lt;AgentIdentityCodeParts, "oid" | "version"&gt; & Partial&lt;Pick&lt;AgentIdentityCodeParts, "oid" | "version"&gt;&gt;): AgentIdentityCode</div>
+            <p>格式化 GB/Z 185.2 身份码。默认 OID 为 <code>1.2.156.3088</code>，版本为 <code>1</code>，业务节点会转成大写。</p>
+            <dl class="meta-list"><dt>校验</dt><dd>注册服务方和注册请求方最长 6 位；本体序列号和实例序列号最长 9 位；节点必须是 base36 字符。</dd><dt>异常</dt><dd>非法 OID、版本、空节点、过长节点或非法字符会抛错。</dd></dl>
+          </article>
+          <article class="api-entry">
+            <h3><code>parseIdentityCode(code)</code></h3>
+            <div class="signature">parseIdentityCode(code: AgentIdentityCode): AgentIdentityCodeParts</div>
+            <p>解析身份码并返回结构化字段。要求完整 9 段点分结构：OID 四段、版本一段、业务节点四段。</p>
+          </article>
+          <article class="api-entry">
+            <h3><code>validateIdentityCode(code)</code></h3>
+            <div class="signature">validateIdentityCode(code: AgentIdentityCode): boolean</div>
+            <p>布尔校验包装器。适合表单校验或过滤输入，不会向调用方抛错。</p>
+          </article>
+          <article class="api-entry">
+            <h3><code>validateIdentityCodeParts(parts)</code></h3>
+            <div class="signature">validateIdentityCodeParts(parts: AgentIdentityCodeParts): void</div>
+            <p>校验结构化身份码字段。非法时抛错，合法时无返回值。</p>
+          </article>
+        </section>
+
+        <section id="identity" class="section">
+          <h2>身份账户</h2>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>API</th><th>签名/成员</th><th>说明</th></tr></thead>
+              <tbody>
+                <tr><td><code>IdentityRegistryRuntime</code></td><td><code>new IdentityRegistryRuntime(store?, credentialIssuer?)</code></td><td>管理服务侧身份账户生命周期运行时。</td></tr>
+                <tr><td><code>register</code></td><td><code>register(input: RegisterIdentityInput): Promise&lt;RegisterIdentityResult&gt;</code></td><td>分配身份码，创建 active 账户，可选发行凭证。</td></tr>
+                <tr><td><code>update</code></td><td><code>update(agentId, patch): Promise&lt;IdentityAccount&gt;</code></td><td>更新描述或证据，并写入 audit log。</td></tr>
+                <tr><td><code>issueCredential</code></td><td><code>issueCredential(agentId, input): Promise&lt;IssuedCredential&gt;</code></td><td>给 active 账户发行凭证；locked/revoked 账户会抛错。</td></tr>
+                <tr><td><code>lock</code></td><td><code>lock(agentId, reason?): Promise&lt;IdentityAccount&gt;</code></td><td>锁定账户，并锁定该账户凭证。</td></tr>
+                <tr><td><code>unlock</code></td><td><code>unlock(agentId, reason?): Promise&lt;IdentityAccount&gt;</code></td><td>恢复账户和凭证为 active。</td></tr>
+                <tr><td><code>revoke</code></td><td><code>revoke(agentId, reason?): Promise&lt;IdentityAccount&gt;</code></td><td>注销账户，并注销该账户凭证。</td></tr>
+                <tr><td><code>get</code></td><td><code>get(agentId): Promise&lt;IdentityAccount | undefined&gt;</code></td><td>读取单个账户。</td></tr>
+                <tr><td><code>list</code></td><td><code>list(): Promise&lt;IdentityAccount[]&gt;</code></td><td>列出账户。</td></tr>
+                <tr><td><code>IdentityAccountStore</code></td><td><code>save</code>, <code>get</code>, <code>list</code></td><td>身份账户存储接口，生产环境替换内存实现。</td></tr>
+                <tr><td><code>InMemoryIdentityAccountStore</code></td><td>内存 Map 实现</td><td>开发、测试使用。</td></tr>
+                <tr><td><code>AgentIdentityMaintenance</code></td><td><code>register</code>, <code>refresh</code>, <code>update</code>, <code>issueCredential</code>, <code>lock</code>, <code>unlock</code>, <code>revoke</code></td><td>智能体侧身份维护门面，保存当前 active account 和本地凭证。</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section id="credentials" class="section">
+          <h2>凭证与鉴别</h2>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>API</th><th>签名/成员</th><th>说明</th></tr></thead>
+              <tbody>
+                <tr><td><code>CredentialIssuer</code></td><td><code>issueCredential</code>, <code>updateCredential</code>, <code>lockCredential</code>, <code>unlockCredential</code>, <code>revokeCredential</code>, <code>getCredential</code></td><td>凭证签发和生命周期接口。</td></tr>
+                <tr><td><code>DevelopmentCredentialIssuer</code></td><td><code>new DevelopmentCredentialIssuer(repository?, statusStore?, issuerId?)</code></td><td>开发实现：生成 Ed25519 key pair，保存 public key 和 private key，默认一年有效。</td></tr>
+                <tr><td><code>CredentialVerifier</code></td><td><code>verifyPresentation(input): Promise&lt;AuthenticationAssertion&gt;</code></td><td>过程凭证包验证接口。</td></tr>
+                <tr><td><code>DevelopmentCredentialVerifier</code></td><td><code>new DevelopmentCredentialVerifier(statusStore?, chainVerifier?)</code></td><td>校验证书状态、有效期、受众、scope、签名和 X.509 public key 匹配。</td></tr>
+                <tr><td><code>CredentialStatusStore</code></td><td><code>getStatus</code>, <code>setStatus</code></td><td>凭证状态查询接口。</td></tr>
+                <tr><td><code>InMemoryCredentialStatusStore</code></td><td>内存状态实现</td><td>保存 active、locked、revoked。</td></tr>
+                <tr><td><code>InMemoryCredentialRepository</code></td><td><code>save</code>, <code>get</code>, <code>listByAgent</code></td><td>凭证存储实现。</td></tr>
+                <tr><td><code>CertificateChainVerifier</code></td><td><code>verifyCertificateChain(credential, now?)</code></td><td>X.509 证书链验证扩展点。</td></tr>
+                <tr><td><code>NodeX509CertificateChainVerifier</code></td><td>Node.js <code>X509Certificate</code> 检查</td><td>验证证书有效期和证书 public key 是否匹配凭证 public key。</td></tr>
+                <tr><td><code>createProcessCredentialPackage</code></td><td><code>createProcessCredentialPackage(input): ProcessCredentialPackage</code></td><td>用私钥签名 audience、scope、timestamp、payload 等内容，生成过程凭证包。</td></tr>
+                <tr><td><code>canonicalJson</code></td><td><code>canonicalJson(value): string</code></td><td>稳定 JSON 序列化，用于签名载荷。</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <article class="api-entry">
+            <h3><code>InterconnectionAuthorizationRuntime</code></h3>
+            <div class="signature">new InterconnectionAuthorizationRuntime(verifier: CredentialVerifier)</div>
+            <p>智能体互联授权运行时，把凭证验证结果转为可执行的授权决策。</p>
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>方法</th><th>返回</th><th>说明</th></tr></thead>
+                <tbody>
+                  <tr><td><code>createPresentation(input)</code></td><td><code>ProcessCredentialPackage</code></td><td>创建过程凭证包。</td></tr>
+                  <tr><td><code>authenticatePeer(pkg, policy)</code></td><td><code>AuthorizationDecision</code></td><td>验证对端凭证包并套用授权策略。</td></tr>
+                  <tr><td><code>authorizeAssertion(assertion, policy)</code></td><td><code>AuthorizationDecision</code></td><td>把鉴别断言转为 allow/deny。</td></tr>
+                  <tr><td><code>mutualAuthenticate(input)</code></td><td><code>MutualAuthenticationResult</code></td><td>同时验证请求方和服务方。</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </article>
+        </section>
+
+        <section id="description" class="section">
+          <h2>描述管理</h2>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>API</th><th>签名/成员</th><th>说明</th></tr></thead>
+              <tbody>
+                <tr><td><code>AgentDescriptionRegistry</code></td><td><code>new AgentDescriptionRegistry(store?)</code></td><td>描述注册、审核、发布、变更、下架、撤销运行时。</td></tr>
+                <tr><td><code>register</code></td><td><code>register(description): Promise&lt;DescriptionRecord&gt;</code></td><td>校验并注册描述，默认 <code>discoverable</code> 和 <code>available</code> 为 true。</td></tr>
+                <tr><td><code>review</code></td><td><code>review(agentId, review): Promise&lt;DescriptionRecord&gt;</code></td><td>追加审核记录。</td></tr>
+                <tr><td><code>issuePublicationCertificate</code></td><td><code>issuePublicationCertificate(agentId, input): Promise&lt;PublicationCertificate&gt;</code></td><td>生成发布证书元数据。</td></tr>
+                <tr><td><code>publish</code></td><td><code>publish(agentId, publication?): Promise&lt;DescriptionRecord&gt;</code></td><td>发布描述；revoked 描述不可发布。</td></tr>
+                <tr><td><code>change</code></td><td><code>change(agentId, patch): Promise&lt;DescriptionRecord&gt;</code></td><td>合并修改描述并重新校验。</td></tr>
+                <tr><td><code>unpublish</code></td><td><code>unpublish(agentId): Promise&lt;DescriptionRecord&gt;</code></td><td>状态变为 unpublished，available 变为 false。</td></tr>
+                <tr><td><code>revoke</code></td><td><code>revoke(agentId, reason?): Promise&lt;DescriptionRecord&gt;</code></td><td>状态变为 revoked，discoverable 和 available 变为 false。</td></tr>
+                <tr><td><code>get</code></td><td><code>get(agentId): Promise&lt;DescriptionRecord | undefined&gt;</code></td><td>读取描述记录。</td></tr>
+                <tr><td><code>list</code></td><td><code>list({ publishedOnly? }): Promise&lt;DescriptionRecord[]&gt;</code></td><td>列出全部或已发布记录。</td></tr>
+                <tr><td><code>DescriptionStore</code></td><td><code>save</code>, <code>get</code>, <code>list</code></td><td>描述存储扩展点。</td></tr>
+                <tr><td><code>AgentDescriptionMaintenance</code></td><td><code>register</code>, <code>requestReview</code>, <code>publish</code>, <code>change</code>, <code>unpublish</code>, <code>revoke</code></td><td>智能体侧描述维护门面。</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section id="discovery" class="section">
+          <h2>发现服务</h2>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>API</th><th>签名/成员</th><th>说明</th></tr></thead>
+              <tbody>
+                <tr><td><code>PresetDiscoverySource</code></td><td><code>new PresetDiscoverySource(descriptions?)</code>, <code>list()</code></td><td>预置发现源，可表示缓存、用户配置或 well-known 派生描述。</td></tr>
+                <tr><td><code>DiscoveryService</code></td><td><code>new DiscoveryService(registry, presetSources?)</code></td><td>组合已发布描述和预置源，并按查询条件排序。</td></tr>
+                <tr><td><code>discover</code></td><td><code>discover(query: DiscoveryQuery): Promise&lt;DiscoveryResult[]&gt;</code></td><td>支持 <code>text</code>、<code>agentId</code>、<code>name</code>、<code>requiredSkills</code>、<code>tags</code>、<code>inputTypes</code>、<code>outputTypes</code>、<code>includeUndiscoverable</code>、<code>requireAvailable</code>、<code>limit</code>。</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section id="interaction" class="section">
           <h2>交互与消息</h2>
-          <ul>
-            <li><code>InteractionRuntime</code></li>
-            <li><code>MessageDistributionRuntime</code></li>
-            <li><code>Session</code></li>
-            <li><code>Task</code></li>
-            <li><code>Message</code></li>
-            <li><code>DataItem</code></li>
-          </ul>
-        </article>
-        <article>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>API</th><th>签名/成员</th><th>说明</th></tr></thead>
+              <tbody>
+                <tr><td><code>InteractionRuntime</code></td><td><code>createSession</code>, <code>submitTask</code>, <code>updateTaskState</code>, <code>sendMessage</code>, <code>listMessages</code>, <code>getSession</code>, <code>getTask</code></td><td>GB/Z 185.6 会话、任务、消息内存运行时。</td></tr>
+                <tr><td><code>createSession</code></td><td><code>createSession(input): Promise&lt;Session&gt;</code></td><td>创建会话；至少需要一个 receiver。</td></tr>
+                <tr><td><code>submitTask</code></td><td><code>submitTask(input): Promise&lt;Task&gt;</code></td><td>创建任务，状态为 accepted，可带初始消息和产物。</td></tr>
+                <tr><td><code>updateTaskState</code></td><td><code>updateTaskState(taskId, state): Promise&lt;Task&gt;</code></td><td>更新任务状态。</td></tr>
+                <tr><td><code>sendMessage</code></td><td><code>sendMessage(input): Promise&lt;Message&gt;</code></td><td>写入会话消息；可设置 <code>artifact</code>、<code>final</code>、<code>chunkIndex</code>、<code>lastChunk</code>。</td></tr>
+                <tr><td><code>MessageDistributionRuntime</code></td><td><code>distribute</code>, <code>listInbox</code></td><td>群组消息分发。默认从会话中推断除发送方外的收件人。</td></tr>
+                <tr><td><code>DistributionReceipt</code></td><td>recipientId、sessionId、messageId、deliveredAt、message</td><td>分发回执。</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section id="tools" class="section">
           <h2>工具调用</h2>
-          <ul>
-            <li><code>ToolAccessRuntime</code></li>
-            <li><code>ToolRuntime</code></li>
-            <li><code>ToolDescriptor</code></li>
-            <li><code>ToolInvokeRequest</code></li>
-            <li><code>ToolInvokeResult</code></li>
-          </ul>
-        </article>
-      </section>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>API</th><th>签名/成员</th><th>说明</th></tr></thead>
+              <tbody>
+                <tr><td><code>ToolRuntime</code></td><td><code>registerTool</code>, <code>listTools</code>, <code>getUpdates</code>, <code>invoke</code></td><td>资源侧工具服务。</td></tr>
+                <tr><td><code>registerTool</code></td><td><code>registerTool(descriptor, handler): Promise&lt;ToolDescriptor&gt;</code></td><td>校验工具描述并注册 handler。</td></tr>
+                <tr><td><code>listTools</code></td><td><code>listTools(requestedToolIds?): Promise&lt;ToolSyncData&gt;</code></td><td>返回全部工具或指定 ID 工具。未传 ID 时 <code>syncType</code> 为 1。</td></tr>
+                <tr><td><code>getUpdates</code></td><td><code>getUpdates(): Promise&lt;ToolUpdateData&gt;</code></td><td>返回注册后发生更新的工具摘要，并清空更新集合。</td></tr>
+                <tr><td><code>invoke</code></td><td><code>invoke(request): Promise&lt;ToolInvokeResult&gt;</code></td><td>批量调用工具。缺失工具返回 <code>TOOL_NOT_FOUND</code>，handler 抛错返回 <code>TOOL_EXECUTION_FAILED</code>。</td></tr>
+                <tr><td><code>ToolAccessRuntime</code></td><td><code>getToolList</code>, <code>syncToolUpdates</code>, <code>invokeTools</code>, <code>invokeUntilComplete</code></td><td>智能体侧工具访问门面。</td></tr>
+                <tr><td><code>invokeUntilComplete</code></td><td><code>invokeUntilComplete({ initialRequest, isComplete, nextRequest, maxRounds? })</code></td><td>循环调用工具，直到完成或达到最大轮次，默认最多 8 轮。</td></tr>
+                <tr><td><code>ToolHandler</code></td><td><code>(input, context) =&gt; JsonObject | Promise&lt;JsonObject&gt;</code></td><td>工具实现函数，context 带 sessionId 和当前调用项。</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
 
-      <section class="section">
-        <h2>完整流程示例</h2>
-        <pre><code>const runtime = createAgentInterconnectRuntime();
+        <section id="transport" class="section">
+          <h2>Transport</h2>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>API</th><th>签名/成员</th><th>说明</th></tr></thead>
+              <tbody>
+                <tr><td><code>JsonTransport</code></td><td><code>request&lt;TRequest, TResponse&gt;(operation, payload)</code></td><td>所有 client 调用的唯一传输抽象。</td></tr>
+                <tr><td><code>JsonOperationHandler</code></td><td><code>(payload) =&gt; TResponse | Promise&lt;TResponse&gt;</code></td><td>进程内 operation handler 类型。</td></tr>
+                <tr><td><code>InProcessJsonTransport</code></td><td><code>register(operation, handler)</code>, <code>request(operation, payload)</code></td><td>本地 operation 路由。未注册 operation 会抛错。</td></tr>
+                <tr><td><code>HttpJsonTransport</code></td><td><code>new HttpJsonTransport({ endpoint, fetchImpl?, headers? })</code></td><td>向 endpoint POST <code>{ operation, payload }</code>，响应 body 按 JSON 解析。</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <pre><code>const transport = new HttpJsonTransport({
+  endpoint: "https://example.com/gbz185",
+  headers: { authorization: "Bearer token" }
+});
 
-await runtime.toolRuntime.registerTool(
-  {
-    toolId: "calendar.add",
-    toolName: "add_schedule",
-    toolDescription: "Add one calendar event",
-    toolVersion: "1.0.0",
-    toolInputParam: { date: "string", time: "string", event: "string" },
-    toolOutputParam: { eventId: "string", accepted: "boolean" }
-  },
-  (input) => ({ eventId: `evt-${input.date}-${input.time}`, accepted: true })
-);</code></pre>
-      </section>
+const client = new AgentInterconnectClient(transport);
+const results = await client.discover({ text: "calendar schedule" });</code></pre>
+        </section>
+
+        <section id="validation" class="section">
+          <h2>校验</h2>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>API</th><th>返回</th><th>说明</th></tr></thead>
+              <tbody>
+                <tr><td><code>isJsonObject(value)</code></td><td><code>value is JsonObject</code></td><td>判断普通 JSON 对象。</td></tr>
+                <tr><td><code>validateSkillDescription(skill, path?)</code></td><td><code>ValidationResult</code></td><td>校验技能 ID、名称、描述、标签、输入输出类型、示例和依赖。</td></tr>
+                <tr><td><code>validateAgentDescription(description)</code></td><td><code>ValidationResult</code></td><td>校验身份码、名称、版本、provider、capabilities、默认 IO、skills、accessMethod。</td></tr>
+                <tr><td><code>assertAgentDescription(description)</code></td><td><code>void</code></td><td>校验失败时抛出聚合错误。</td></tr>
+                <tr><td><code>validateToolDescriptor(tool)</code></td><td><code>ValidationResult</code></td><td>校验工具 ID、名称、描述、版本、输入输出 JSON 对象。</td></tr>
+                <tr><td><code>assertToolDescriptor(tool)</code></td><td><code>void</code></td><td>校验失败时抛错。</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section id="models" class="section">
+          <h2>核心模型与接口</h2>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>类型</th><th>关键字段</th><th>说明</th></tr></thead>
+              <tbody>
+                <tr><td><code>AgentIdentityCodeParts</code></td><td>oid、version、registrationServiceProvider、registrationRequester、ontologySerial、instanceSerial</td><td>身份码结构化字段。</td></tr>
+                <tr><td><code>AgentIdentityCode</code></td><td><code>string</code></td><td>身份码字符串别名。</td></tr>
+                <tr><td><code>IdentityAccount</code></td><td>id、delegatorId、subject、status、credentialIds、evidence、auditLog、createdAt、updatedAt</td><td>身份账户记录。</td></tr>
+                <tr><td><code>RegisterIdentityInput</code></td><td>delegatorId、subject、registrationServiceProvider、registrationRequester、ontologySerial、instanceSerial、issueCredential、credentialAudience、credentialScope</td><td>注册身份输入。</td></tr>
+                <tr><td><code>AgentCredential</code></td><td>credentialId、agentId、issuerId、subject、publicKeyPem、certificatePem、audience、scope、issuedAt、expiresAt</td><td>智能体凭证。</td></tr>
+                <tr><td><code>ProcessCredentialPackage</code></td><td>credential、audience、scope、nonce、timestamp、payload、signature</td><td>过程凭证包。</td></tr>
+                <tr><td><code>AuthenticationAssertion</code></td><td>assertionId、result、agentId、credentialId、verifiedAt、reason、verifiedAttributes、policyAdvice</td><td>鉴别断言。</td></tr>
+                <tr><td><code>AuthorizationPolicy</code></td><td>expectedAudience、requiredScope、allowNeedsMoreVerification、metadata</td><td>授权策略。</td></tr>
+                <tr><td><code>AgentDescription</code></td><td>agentId、name、version、description、provider、accessMethod、authentication、capabilities、defaultInputTypes、defaultOutputTypes、skills、discoverable、available</td><td>智能体描述。</td></tr>
+                <tr><td><code>SkillDescription</code></td><td>skillId、skillName、skillDescription、tags、examples、inputTypes、outputTypes、dependencies</td><td>智能体技能描述。</td></tr>
+                <tr><td><code>DescriptionRecord</code></td><td>description、status、published、reviews、publication、publicationCertificate、revokedAt、revokeReason</td><td>描述生命周期记录。</td></tr>
+                <tr><td><code>DiscoveryQuery</code></td><td>text、agentId、name、requiredSkills、tags、inputTypes、outputTypes、includeUndiscoverable、requireAvailable、limit</td><td>发现查询。</td></tr>
+                <tr><td><code>DiscoveryResult</code></td><td>description、score、matchedBy</td><td>发现结果和匹配原因。</td></tr>
+                <tr><td><code>Session</code></td><td>id、mode、sender、receivers、context、createdAt</td><td>会话。</td></tr>
+                <tr><td><code>Task</code></td><td>id、sessionId、state、stateChangedAt、messages、artifacts</td><td>任务。</td></tr>
+                <tr><td><code>Message</code></td><td>senderRole、senderId、sessionId、taskId、id、artifact、final、chunkIndex、lastChunk、dataItems、createdAt</td><td>消息。</td></tr>
+                <tr><td><code>DataItem</code></td><td>type、metadata、payload</td><td>消息数据项。</td></tr>
+                <tr><td><code>ToolDescriptor</code></td><td>toolId、toolName、toolDescription、toolVersion、toolInputParam、toolOutputParam、metadata</td><td>工具描述。</td></tr>
+                <tr><td><code>ToolInvokeRequest</code></td><td>sessionId、timestamp、toolInvokeList</td><td>工具调用请求。</td></tr>
+                <tr><td><code>ToolInvokeResult</code></td><td>sessionId、timestamp、toolResultList</td><td>工具调用结果。</td></tr>
+                <tr><td><code>JsonObject</code> / <code>JsonValue</code></td><td>JSON 兼容值</td><td>传输和模型扩展字段的基础类型。</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section id="constants" class="section">
+          <h2>国标覆盖常量</h2>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>常量</th><th>类型</th><th>说明</th></tr></thead>
+              <tbody>
+                <tr><td><code>GBZ185_FUNCTIONS</code></td><td><code>Gbz185FunctionDescriptor[]</code></td><td>12 个 GB/Z 185.1 功能域到 SDK surface 的映射。</td></tr>
+                <tr><td><code>GBZ185_FRAI_INTERFACES</code></td><td><code>Gbz185FraiInterfaceDescriptor[]</code></td><td>FRAI-01 到 FRAI-10 参考接口映射。</td></tr>
+                <tr><td><code>GBZ185_CONFORMANCE_MATRIX</code></td><td><code>Gbz185ConformanceItem[]</code></td><td>GB/Z 185.1-185.7 条款级覆盖矩阵。</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </div>
     </main>
 
     <footer>
-      <span>API</span>
-      <span><a href="index.html">Back home</a></span>
+      <span>API Reference</span>
+      <span><a href="examples.html">Next: Examples</a></span>
     </footer>
   </body>
 </html>

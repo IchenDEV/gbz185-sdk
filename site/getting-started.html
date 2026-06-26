@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Get Started | gbz185-sdk</title>
+    <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="assets/styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="index.html">gbz185-sdk</a>
+      <nav>
+        <a href="setup.html">Setup</a>
+        <a href="getting-started.html">Get Started</a>
+        <a href="api.html">API Reference</a>
+        <a href="examples.html">Examples</a>
+        <a href="conformance.html">国标对照</a>
+        <a href="https://github.com/IchenDEV/gbz185-sdk">GitHub</a>
+      </nav>
+    </header>
+
+    <main class="docs-layout">
+      <aside class="docs-sidebar">
+        <strong>Get Started</strong>
+        <a href="#flow">完整链路</a>
+        <a href="#identity">1. 注册身份</a>
+        <a href="#description">2. 发布描述</a>
+        <a href="#tool">3. 注册工具</a>
+        <a href="#discover">4. 发现智能体</a>
+        <a href="#session">5. 建会话与任务</a>
+        <a href="#invoke">6. 调用工具并回消息</a>
+        <a href="#run">运行示例</a>
+      </aside>
+
+      <div class="docs-content">
+        <section class="page-title">
+          <h1>Get Started</h1>
+          <p>这一页用一个日历智能体示例跑通核心链路：身份注册、描述发布、发现、会话、任务、工具调用、最终结果消息。</p>
+        </section>
+
+        <section id="flow" class="section">
+          <h2>完整链路</h2>
+          <ol>
+            <li>创建内存参考运行时：<code>createAgentInterconnectRuntime()</code>。</li>
+            <li>给请求方和服务方准备 GB/Z 185 身份码。</li>
+            <li>注册服务方身份并可选发行开发凭证。</li>
+            <li>注册并发布智能体描述。</li>
+            <li>注册资源侧工具。</li>
+            <li>通过发现服务找到服务方智能体。</li>
+            <li>创建点对点会话和任务。</li>
+            <li>调用工具并把结果作为 <code>work_result</code> 消息写回会话。</li>
+          </ol>
+        </section>
+
+        <section id="identity" class="section">
+          <h2>1. 注册身份</h2>
+          <pre><code>import {
+  createAgentInterconnectRuntime,
+  formatIdentityCode,
+  type AgentDescription
+} from "gbz185-sdk";
+
+const runtime = createAgentInterconnectRuntime();
+
+const requesterId = formatIdentityCode({
+  registrationServiceProvider: "A1",
+  registrationRequester: "REQ001",
+  ontologySerial: "ASSISTANT",
+  instanceSerial: "1"
+});
+
+const registration = await runtime.client.registerIdentity({
+  delegatorId: "example-org",
+  subject: "Calendar Agent",
+  registrationServiceProvider: "A1",
+  registrationRequester: "REQ001",
+  ontologySerial: "CALENDAR",
+  instanceSerial: "1",
+  issueCredential: true,
+  credentialAudience: [requesterId],
+  credentialScope: ["agent:interact", "tool:invoke"]
+});</code></pre>
+          <p><code>registration.account.id</code> 是服务方智能体身份码。开启 <code>issueCredential</code> 时，内存运行时也会返回一张开发凭证。</p>
+        </section>
+
+        <section id="description" class="section">
+          <h2>2. 发布智能体描述</h2>
+          <pre><code>const description: AgentDescription = {
+  agentId: registration.account.id,
+  name: "Calendar Agent",
+  version: "1.0.0",
+  description: "Creates calendar events from natural language task requests",
+  provider: "Example Org",
+  accessAddress: "local://calendar",
+  accessMethod: [{ type: "url", address: "local://calendar" }],
+  authentication: { type: "x509" },
+  capabilities: { asyncMessages: true, taskStateHistory: true },
+  defaultInputTypes: ["text", "json"],
+  defaultOutputTypes: ["json"],
+  skills: [
+    {
+      skillId: "schedule.add",
+      skillName: "add_schedule",
+      skillDescription: "Add one calendar schedule item",
+      tags: ["calendar", "schedule"],
+      inputTypes: ["text", "json"],
+      outputTypes: ["json"]
+    }
+  ]
+};
+
+await runtime.client.registerDescription(description);
+await runtime.client.publishDescription(description.agentId);</code></pre>
+          <p>注册会校验描述和技能必填字段；发布后才能被默认发现流程检索到。</p>
+        </section>
+
+        <section id="tool" class="section">
+          <h2>3. 注册工具</h2>
+          <pre><code>await runtime.toolRuntime.registerTool(
+  {
+    toolId: "calendar.add",
+    toolName: "add_schedule",
+    toolDescription: "Add one calendar event",
+    toolVersion: "1.0.0",
+    toolInputParam: { date: "string", time: "string", event: "string" },
+    toolOutputParam: { eventId: "string", accepted: "boolean" }
+  },
+  (input) => ({
+    eventId: `evt-${input.date}-${input.time}`,
+    accepted: true
+  })
+);</code></pre>
+          <p><code>ToolRuntime</code> 是资源侧工具服务，<code>ToolAccessRuntime</code> 是智能体侧工具访问门面。内存运行时已经把二者连在一起。</p>
+        </section>
+
+        <section id="discover" class="section">
+          <h2>4. 发现智能体</h2>
+          <pre><code>const [match] = await runtime.client.discover({
+  text: "calendar schedule",
+  requiredSkills: ["schedule.add"],
+  requireAvailable: true
+});
+
+if (!match) {
+  throw new Error("Calendar agent was not discovered");
+}</code></pre>
+          <p>发现服务会按文本、名称、技能、标签、输入输出类型、可发现性和可用性过滤，并返回 <code>score</code> 与 <code>matchedBy</code>。</p>
+        </section>
+
+        <section id="session" class="section">
+          <h2>5. 建会话与任务</h2>
+          <pre><code>const session = await runtime.client.createSession({
+  mode: "point_to_point",
+  sender: { agentId: requesterId },
+  receivers: [
+    {
+      agentId: match.description.agentId,
+      mode: "point_to_point",
+      accessAddress: match.description.accessAddress
+    }
+  ]
+});
+
+const task = await runtime.client.submitTask({
+  sessionId: session.id
+});</code></pre>
+          <p><code>mode</code> 可以是 <code>point_to_point</code>、<code>group</code> 或 <code>hybrid</code>。任务初始状态为 <code>accepted</code>。</p>
+        </section>
+
+        <section id="invoke" class="section">
+          <h2>6. 调用工具并回写最终结果</h2>
+          <pre><code>const toolResult = await runtime.client.invokeTools({
+  sessionId: session.id,
+  toolInvokeList: [
+    {
+      toolId: "calendar.add",
+      toolVersion: "1.0.0",
+      toolInputParam: {
+        date: "2026-06-26",
+        time: "10:00",
+        event: "GB/Z 185 SDK review"
+      }
+    }
+  ]
+});
+
+await runtime.client.sendMessage({
+  senderRole: "service",
+  senderId: match.description.agentId,
+  sessionId: session.id,
+  taskId: task.id,
+  artifact: "work_result",
+  final: true,
+  lastChunk: true,
+  dataItems: [
+    {
+      type: "application/json",
+      metadata: {},
+      payload: toolResult.toolResultList[0] ?? null
+    }
+  ]
+});</code></pre>
+          <p>工具调用不会因为某个工具失败而让整个批次抛错；失败项会以 <code>ok: false</code> 和 <code>statusCode</code> 出现在结果列表里。</p>
+        </section>
+
+        <section id="run" class="section">
+          <h2>运行仓库内示例</h2>
+          <pre><code>git clone https://github.com/IchenDEV/gbz185-sdk.git
+cd gbz185-sdk
+pnpm install
+pnpm build
+pnpm example:calendar</code></pre>
+          <div class="callout">
+            <p><strong>说明：</strong> 仓库使用 <code>tsx</code> 执行 TypeScript 示例。业务项目里也可以直接从 <code>gbz185-sdk</code> 导入同样 API。</p>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <footer>
+      <span>Get Started</span>
+      <span><a href="api.html">Next: API Reference</a></span>
+    </footer>
+  </body>
+</html>

@@ -11,68 +11,132 @@
     <header class="site-header">
       <a class="brand" href="index.html">gbz185-sdk</a>
       <nav>
-        <a href="api.html">API</a>
+        <a href="setup.html">Setup</a>
+        <a href="getting-started.html">Get Started</a>
+        <a href="api.html">API Reference</a>
+        <a href="examples.html">Examples</a>
         <a href="conformance.html">国标对照</a>
         <a href="https://github.com/IchenDEV/gbz185-sdk">GitHub</a>
       </nav>
     </header>
 
-    <main>
-      <section class="page-title">
-        <h1>GB/Z 185 对照验证</h1>
-        <p>SDK 导出 <code>GBZ185_CONFORMANCE_MATRIX</code>，当前矩阵包含 24 条对照项，覆盖 7 个分册。</p>
-      </section>
+    <main class="docs-layout">
+      <aside class="docs-sidebar">
+        <strong>国标对照</strong>
+        <a href="#summary">覆盖摘要</a>
+        <a href="#function-map">功能域</a>
+        <a href="#frai">FRAI 接口</a>
+        <a href="#matrix">条款矩阵</a>
+        <a href="#boundaries">边界</a>
+      </aside>
 
-      <section class="stats">
-        <div><strong>12</strong><span>功能域</span></div>
-        <div><strong>10</strong><span>FRAI 接口</span></div>
-        <div><strong>24</strong><span>条款对照</span></div>
-        <div><strong>7</strong><span>标准分册</span></div>
-      </section>
+      <div class="docs-content">
+        <section class="page-title">
+          <h1>GB/Z 185 对照验证</h1>
+          <p>SDK 导出 <code>GBZ185_FUNCTIONS</code>、<code>GBZ185_FRAI_INTERFACES</code> 和 <code>GBZ185_CONFORMANCE_MATRIX</code>。这页把同样的信息直接展开，方便开发者判断该用哪个 API。</p>
+        </section>
 
-      <section class="section">
-        <h2>覆盖结论</h2>
-        <ul class="check-list">
-          <li>GB/Z 185.1 功能参考架构：覆盖。</li>
-          <li>GB/Z 185.2 身份码结构与校验：覆盖。</li>
-          <li>GB/Z 185.3 身份、凭证、鉴别生命周期：参考运行时覆盖，生产 CA 为扩展点。</li>
-          <li>GB/Z 185.4 智能体描述与发布生命周期：覆盖。</li>
-          <li>GB/Z 185.5 发现服务与预置信息发现：覆盖。</li>
-          <li>GB/Z 185.6 点对点、群组、混合交互模型：覆盖。</li>
-          <li>GB/Z 185.7 工具访问、工具服务、数据格式：覆盖。</li>
-        </ul>
-      </section>
+        <section id="summary" class="stats">
+          <div><strong>12</strong><span>功能域</span></div>
+          <div><strong>10</strong><span>FRAI 接口</span></div>
+          <div><strong>24</strong><span>条款对照</span></div>
+          <div><strong>7</strong><span>标准分册</span></div>
+        </section>
 
-      <section class="section">
-        <h2>显式扩展边界</h2>
-        <p>以下内容属于外部治理、基础设施或应用界面，不在 SDK 中假实现，而是通过接口开放接入。</p>
-        <div class="table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th>扩展边界</th>
-                <th>SDK 接口</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr><td>生产级 CA、证书状态、国密算法</td><td><code>CertificateChainVerifier</code>、<code>CredentialIssuer</code>、<code>CredentialVerifier</code></td></tr>
-              <tr><td>监管认可的注册服务方治理</td><td><code>IdentityRegistryRuntime</code>、<code>IdentityAccountStore</code></td></tr>
-              <tr><td>GUI/LUI 发现界面</td><td><code>AgentInterconnectClient</code>、<code>JsonTransport</code></td></tr>
-              <tr><td>REST、WebSocket、MCP、消息队列</td><td><code>JsonTransport</code>、<code>HttpJsonTransport</code></td></tr>
-              <tr><td>不可篡改审计存储</td><td><code>IdentityAuditEvent</code>、自定义 store</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </section>
+        <section id="function-map" class="section">
+          <h2>GB/Z 185.1 功能域到 SDK 表面</h2>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>功能域</th><th>SDK 表面</th><th>标准分册</th></tr></thead>
+              <tbody>
+                <tr><td>Agent identity maintenance</td><td><code>AgentIdentityMaintenance</code></td><td>185.1, 185.2, 185.3</td></tr>
+                <tr><td>Agent description maintenance</td><td><code>AgentDescriptionMaintenance</code></td><td>185.1, 185.4</td></tr>
+                <tr><td>Agent interconnection authorization</td><td><code>InterconnectionAuthorizationRuntime</code></td><td>185.1, 185.3</td></tr>
+                <tr><td>Agent interaction</td><td><code>InteractionRuntime</code></td><td>185.6</td></tr>
+                <tr><td>Tool access</td><td><code>ToolAccessRuntime</code></td><td>185.7</td></tr>
+                <tr><td>Agent identity management</td><td><code>IdentityRegistryRuntime</code></td><td>185.3</td></tr>
+                <tr><td>Agent credential management</td><td><code>CredentialIssuer</code></td><td>185.3</td></tr>
+                <tr><td>Agent identity authentication</td><td><code>CredentialVerifier</code></td><td>185.3</td></tr>
+                <tr><td>Agent description management</td><td><code>AgentDescriptionRegistry</code></td><td>185.4</td></tr>
+                <tr><td>Agent discovery</td><td><code>DiscoveryService</code></td><td>185.5</td></tr>
+                <tr><td>Message distribution</td><td><code>MessageDistributionRuntime</code></td><td>185.6</td></tr>
+                <tr><td>Tool service</td><td><code>ToolRuntime</code></td><td>185.7</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
 
-      <section class="section">
-        <h2>验证命令</h2>
-        <pre><code>pnpm install
-pnpm typecheck
-pnpm test
-pnpm build
-pnpm pack --pack-destination /tmp</code></pre>
-      </section>
+        <section id="frai" class="section">
+          <h2>FRAI-01 到 FRAI-10</h2>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>接口</th><th>连接功能</th><th>SDK 表面</th></tr></thead>
+              <tbody>
+                <tr><td>FRAI-01</td><td>身份维护 -> 身份管理</td><td><code>AgentIdentityMaintenance</code> + <code>IdentityRegistryRuntime</code></td></tr>
+                <tr><td>FRAI-02</td><td>身份维护 -> 凭证管理</td><td><code>AgentIdentityMaintenance</code> + <code>CredentialIssuer</code></td></tr>
+                <tr><td>FRAI-03</td><td>互联授权 -> 身份鉴别</td><td><code>InterconnectionAuthorizationRuntime</code> + <code>CredentialVerifier</code></td></tr>
+                <tr><td>FRAI-04</td><td>身份管理 -> 凭证管理</td><td><code>IdentityRegistryRuntime.issueCredential</code></td></tr>
+                <tr><td>FRAI-05</td><td>凭证管理 -> 身份鉴别</td><td><code>CredentialStatusStore</code> + <code>CredentialVerifier</code></td></tr>
+                <tr><td>FRAI-06</td><td>描述维护 -> 描述管理</td><td><code>AgentDescriptionMaintenance</code> + <code>AgentDescriptionRegistry</code></td></tr>
+                <tr><td>FRAI-07</td><td>描述管理 -> 发现</td><td><code>AgentDescriptionRegistry</code> + <code>DiscoveryService</code></td></tr>
+                <tr><td>FRAI-08</td><td>智能体交互 -> 智能体交互</td><td><code>InteractionRuntime</code></td></tr>
+                <tr><td>FRAI-09</td><td>智能体交互 -> 消息分发</td><td><code>InteractionRuntime</code> + <code>MessageDistributionRuntime</code></td></tr>
+                <tr><td>FRAI-10</td><td>工具访问 -> 工具服务</td><td><code>ToolAccessRuntime</code> + <code>ToolRuntime</code></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section id="matrix" class="section">
+          <h2>条款级覆盖矩阵</h2>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr><th>分册</th><th>条款</th><th>主题</th><th>状态</th><th>SDK 表面</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>GB/Z 185.1</td><td>5</td><td>用户、智能体、管理服务、互联服务、资源访问概念域</td><td>Covered</td><td><code>createAgentInterconnectRuntime</code>, <code>AgentInterconnectRuntime</code></td></tr>
+                <tr><td>GB/Z 185.1</td><td>6.2</td><td>功能参考架构函数集</td><td>Covered</td><td><code>GBZ185_FUNCTIONS</code></td></tr>
+                <tr><td>GB/Z 185.1</td><td>6.3</td><td>FRAI-01 到 FRAI-10</td><td>Covered</td><td><code>GBZ185_FRAI_INTERFACES</code></td></tr>
+                <tr><td>GB/Z 185.2</td><td>5.1-5.6</td><td>身份码 OID、版本、服务方、请求方、本体序列号、实例序列号</td><td>Covered</td><td><code>formatIdentityCode</code>, <code>parseIdentityCode</code>, <code>validateIdentityCode</code></td></tr>
+                <tr><td>GB/Z 185.2</td><td>6</td><td>身份码分配和管理</td><td>Reference runtime</td><td><code>IdentityRegistryRuntime</code>, <code>AgentIdentityMaintenance</code></td></tr>
+                <tr><td>GB/Z 185.2</td><td>Appendix B</td><td>国际身份码获取治理</td><td>Extension point</td><td><code>IdentityAccountStore</code></td></tr>
+                <tr><td>GB/Z 185.3</td><td>5</td><td>身份管理框架</td><td>Covered</td><td><code>IdentityRegistryRuntime</code>, <code>CredentialIssuer</code>, <code>CredentialVerifier</code></td></tr>
+                <tr><td>GB/Z 185.3</td><td>6</td><td>注册和证据核验</td><td>Reference runtime</td><td><code>RegisterIdentityInput.evidence</code>, <code>IdentityRegistryRuntime.register</code></td></tr>
+                <tr><td>GB/Z 185.3</td><td>7</td><td>账户更新、锁定、解锁、注销、审计</td><td>Reference runtime</td><td><code>IdentityRegistryRuntime</code>, <code>IdentityAuditEvent</code></td></tr>
+                <tr><td>GB/Z 185.3</td><td>8</td><td>凭证签发、更新、锁定、解锁、注销、状态查询</td><td>Reference runtime</td><td><code>CredentialIssuer</code>, <code>CredentialStatusStore</code></td></tr>
+                <tr><td>GB/Z 185.3</td><td>9</td><td>凭证出示、验证、鉴别断言、授权决策</td><td>Reference runtime</td><td><code>createProcessCredentialPackage</code>, <code>CredentialVerifier</code>, <code>InterconnectionAuthorizationRuntime</code></td></tr>
+                <tr><td>GB/Z 185.3</td><td>9.2</td><td>生产 CA、国密算法、不可篡改审计</td><td>Extension point</td><td><code>CertificateChainVerifier</code>, <code>CredentialIssuer</code>, <code>CredentialVerifier</code></td></tr>
+                <tr><td>GB/Z 185.4</td><td>5</td><td>智能体描述和技能属性</td><td>Covered</td><td><code>AgentDescription</code>, <code>SkillDescription</code>, <code>validateAgentDescription</code></td></tr>
+                <tr><td>GB/Z 185.4</td><td>6-8</td><td>描述注册、审核、发布证书、发布、变更、下架、撤销</td><td>Reference runtime</td><td><code>AgentDescriptionRegistry</code>, <code>AgentDescriptionMaintenance</code></td></tr>
+                <tr><td>GB/Z 185.5</td><td>5-6.1</td><td>发现服务流程</td><td>Reference runtime</td><td><code>DiscoveryService</code>, <code>AgentInterconnectClient.discover</code></td></tr>
+                <tr><td>GB/Z 185.5</td><td>6.2</td><td>预置信息、缓存、用户配置、well-known 派生发现</td><td>Reference runtime</td><td><code>PresetDiscoverySource</code></td></tr>
+                <tr><td>GB/Z 185.5</td><td>6.1</td><td>API、GUI、LUI 查询接口</td><td>Extension point</td><td><code>JsonTransport</code>, <code>HttpJsonTransport</code>, <code>AgentInterconnectClient</code></td></tr>
+                <tr><td>GB/Z 185.6</td><td>5-6</td><td>点对点、群组、混合交互模式</td><td>Reference runtime</td><td><code>InteractionRuntime</code>, <code>AgentInteractionMode</code></td></tr>
+                <tr><td>GB/Z 185.6</td><td>7</td><td>数据、消息、任务、会话结构</td><td>Covered</td><td><code>DataItem</code>, <code>Message</code>, <code>Task</code>, <code>Session</code></td></tr>
+                <tr><td>GB/Z 185.6</td><td>8</td><td>点对点和群组消息流程</td><td>Reference runtime</td><td><code>InteractionRuntime</code>, <code>MessageDistributionRuntime</code></td></tr>
+                <tr><td>GB/Z 185.6</td><td>Appendix A-B</td><td>远程调用、流式、通知、代理协商、订阅</td><td>Extension point</td><td><code>JsonTransport</code>, <code>InteractionRuntime</code></td></tr>
+                <tr><td>GB/Z 185.7</td><td>4</td><td>工具调用架构</td><td>Covered</td><td><code>ToolAccessRuntime</code>, <code>ToolRuntime</code></td></tr>
+                <tr><td>GB/Z 185.7</td><td>5</td><td>工具列表、工具更新、工具调用循环</td><td>Reference runtime</td><td><code>ToolAccessRuntime</code>, <code>ToolRuntime</code></td></tr>
+                <tr><td>GB/Z 185.7</td><td>6</td><td>工具描述、请求、同步、更新、调用、结果数据格式</td><td>Covered</td><td><code>ToolDescriptor</code>, <code>ToolInvokeRequest</code>, <code>ToolInvokeResult</code></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section id="boundaries" class="section">
+          <h2>边界说明</h2>
+          <div class="callout warning">
+            <p><strong>Covered</strong> 表示 SDK 类型或公开 API 已直接覆盖；<strong>Reference runtime</strong> 表示内存运行时已提供可运行参考实现；<strong>Extension point</strong> 表示国标涉及治理、基础设施、生产安全或界面形态，SDK 提供接口，不假装替你完成合规落地。</p>
+          </div>
+          <ul>
+            <li>生产级 CA、国密算法、主管部门证书策略：实现 <code>CredentialIssuer</code>、<code>CredentialVerifier</code>、<code>CertificateChainVerifier</code>。</li>
+            <li>监管认可的身份注册治理：实现 <code>IdentityAccountStore</code> 并把审核流程接入 <code>IdentityRegistryRuntime</code>。</li>
+            <li>GUI/LUI 发现界面：基于 <code>AgentInterconnectClient.discover</code> 构建应用界面。</li>
+            <li>REST、WebSocket、MCP、消息队列：实现 <code>JsonTransport</code> 或在服务端适配 operation。</li>
+          </ul>
+        </section>
+      </div>
     </main>
 
     <footer>
