@@ -38,14 +38,32 @@ The SDK exposes every function domain listed in the GB/Z 185.1 reference archite
   - `HttpJsonTransport`
   - `AgentInterconnectClient`
 
-## Install And Verify
+## Install
 
 ```bash
+# npm
+npm install gbz185-sdk
+
+# pnpm
+pnpm add gbz185-sdk
+
+# yarn
+yarn add gbz185-sdk
+```
+
+The package is ESM-only and requires Node.js `>=20`.
+
+## Develop And Verify
+
+```bash
+git clone https://github.com/IchenDEV/gbz185-sdk.git
+cd gbz185-sdk
 pnpm install
 pnpm typecheck
 pnpm test
 pnpm build
 pnpm example:calendar
+pnpm pack:check
 ```
 
 ## Documentation
@@ -54,6 +72,7 @@ pnpm example:calendar
 - SDK guide: [`docs/SDK_GUIDE.md`](docs/SDK_GUIDE.md)
 - API reference: [`docs/API_REFERENCE.md`](docs/API_REFERENCE.md)
 - GB/Z 185 conformance matrix: [`docs/CONFORMANCE.md`](docs/CONFORMANCE.md)
+- npm release checklist: [`docs/NPM_RELEASE.md`](docs/NPM_RELEASE.md)
 - GitHub Pages deployment notes: [`docs/GITHUB_PAGES.md`](docs/GITHUB_PAGES.md)
 
 ## Quick Start

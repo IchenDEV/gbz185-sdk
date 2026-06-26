@@ -5,13 +5,15 @@
   "homepage": "https://blogs.idevlab.dev/gbz185-sdk/",
   "repository": {
     "type": "git",
-    "url": "https://github.com/IchenDEV/gbz185-sdk.git"
+    "url": "git+https://github.com/IchenDEV/gbz185-sdk.git"
   },
   "bugs": {
     "url": "https://github.com/IchenDEV/gbz185-sdk/issues"
   },
   "type": "module",
   "license": "MIT",
+  "packageManager": "pnpm@11.7.0",
+  "sideEffects": false,
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {
@@ -20,15 +22,22 @@
       "import": "./dist/index.js"
     }
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "files": [
     "dist",
     "docs",
+    "CHANGELOG.md",
+    "LICENSE",
     "README.md",
     "examples"
   ],
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
     "example:calendar": "tsx examples/calendar.ts",
+    "pack:check": "npm pack --dry-run",
+    "prepublishOnly": "pnpm typecheck && pnpm test && pnpm build && pnpm example:calendar && pnpm pack:check",
     "test": "vitest run",
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },

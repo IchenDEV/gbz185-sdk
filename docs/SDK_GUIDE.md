@@ -2,6 +2,14 @@
 
 This guide explains how the SDK maps GB/Z 185-2026 into TypeScript APIs and how to use the reference runtime.
 
+## Install
+
+```bash
+npm install gbz185-sdk
+```
+
+The package is ESM-only and supports Node.js `>=20`. It also works with `pnpm add gbz185-sdk` and `yarn add gbz185-sdk`.
+
 ## 1. Runtime Shape
 
 The SDK is organized around the seven GB/Z 185 parts:
@@ -397,6 +405,7 @@ pnpm install
 pnpm typecheck
 pnpm test
 pnpm build
+pnpm example:calendar
 pnpm pack --pack-destination /tmp
 ```
 
