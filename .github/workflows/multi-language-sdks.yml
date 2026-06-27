@@ -6,13 +6,11 @@ on:
       - main
     paths:
       - "sdks/**"
-      - "docs/MULTI_LANGUAGE_SDKS.md"
       - ".github/workflows/multi-language-sdks.yml"
       - "README.md"
   pull_request:
     paths:
       - "sdks/**"
-      - "docs/MULTI_LANGUAGE_SDKS.md"
       - ".github/workflows/multi-language-sdks.yml"
       - "README.md"
   workflow_dispatch:

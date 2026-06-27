@@ -6,8 +6,12 @@ This repository is configured to publish the static documentation site from the 
 
 - `.github/workflows/pages.yml`: GitHub Pages workflow.
 - `site/index.html`: documentation home page.
-- `site/api.html`: API overview.
+- `site/setup.html`: SDK setup and language-specific install notes.
+- `site/getting-started.html`: end-to-end quickstart.
+- `site/api.html`: API reference and client examples.
+- `site/examples.html`: usage examples.
 - `site/conformance.html`: GB/Z 185 conformance page.
+- `site/assets/docs.js`: language toggle, SDK example switcher, dark mode, and code highlighting.
 - `site/assets/styles.css`: shared styles.
 
 ## Deployment

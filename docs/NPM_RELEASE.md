@@ -1,12 +1,12 @@
 # npm Release Checklist
 
-This package is prepared for the public npm package name:
+This package is published under the public npm package name:
 
 ```text
 gbz185-sdk
 ```
 
-As of 2026-06-26, `npm view gbz185-sdk` returns `404 Not Found`, so the name is available unless someone publishes it first.
+The current public release is `gbz185-sdk@0.1.0`.
 
 ## 1. Account And Registry
 
@@ -30,8 +30,6 @@ npm login
 If the account has 2FA enabled, npm will ask for an OTP during publish.
 
 ## 2. Version Check
-
-For the first release, `package.json` is set to `0.1.0`.
 
 Before later releases:
 
@@ -73,7 +71,7 @@ npm publish --access public
 }
 ```
 
-The explicit `--access public` flag is still recommended for the first publish.
+The explicit `--access public` flag is harmless and keeps the publish command consistent.
 
 ## 5. Post-Publish Smoke Test
 
@@ -97,7 +95,7 @@ Expected output includes:
 
 ## 6. Git Tag
 
-After a successful publish:
+After a successful publish, create a tag matching the package version if it does not already exist:
 
 ```bash
 git tag v0.1.0
